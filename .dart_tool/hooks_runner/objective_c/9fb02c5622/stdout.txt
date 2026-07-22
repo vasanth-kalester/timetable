@@ -1,0 +1,56 @@
+Running `(cd /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/; TMPDIR=/var/folders/sc/qb1h3nkj6f1648v8zf6tmp2c0000gn/T/ PATH=/Users/intern/.gemini/antigravity-ide/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin HOME=/Users/intern /opt/homebrew/share/flutter/bin/cache/dart-sdk/bin/dart --packages=/Users/intern/Desktop/vasanthp/.dart_tool/package_config.json /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/objective_c/9fb02c5622/hook.dill --config=/Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/objective_c/9fb02c5622/input.json )`.
+INFO: 2026-07-22 13:10:15.966894: No compiler set in BuildInput.cCompiler.cc. Falling back to assuming clang is in the PATH.
+
+INFO: 2026-07-22 13:10:15.970324: Running: clang -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 -c /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/src/include/dart_api_dl.c -fpic -gline-tables-only -I src -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-07-22 13:10:15.971404: Running: clang -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 -c /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/src/objective_c.c -fpic -gline-tables-only -I src -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.c.o
+
+INFO: 2026-07-22 13:10:15.971568: Running: clang -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 -x objective-c -fobjc-arc -c /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/src/input_stream_adapter.m -fpic -gline-tables-only -I src -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/input_stream_adapter.m.o
+
+INFO: 2026-07-22 13:10:15.971677: Running: clang -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 -x objective-c -fobjc-arc -c /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/src/objective_c.m -fpic -gline-tables-only -I src -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.m.o
+
+INFO: 2026-07-22 13:10:15.971778: Running: clang -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 -x objective-c -fobjc-arc -c /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/src/observer.m -fpic -gline-tables-only -I src -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/observer.m.o
+
+INFO: 2026-07-22 13:10:15.971875: Running: clang -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 -x objective-c -fobjc-arc -c /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/src/ns_number.m -fpic -gline-tables-only -I src -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/ns_number.m.o
+
+INFO: 2026-07-22 13:10:15.971970: Running: clang -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 -x objective-c -fobjc-arc -c /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/src/protocol.m -fpic -gline-tables-only -I src -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/protocol.m.o
+
+INFO: 2026-07-22 13:10:15.972070: Running: clang -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 -x objective-c -fobjc-arc -c /Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/src/objective_c_bindings_generated.m -fpic -gline-tables-only -I src -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c_bindings_generated.m.o
+
+INFO: 2026-07-22 13:10:16.247025: 
+INFO: 2026-07-22 13:10:16.247228: 
+INFO: 2026-07-22 13:10:16.247483: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.c.o
+INFO: 2026-07-22 13:10:16.247942: 
+INFO: 2026-07-22 13:10:16.247968: 
+INFO: 2026-07-22 13:10:16.247979: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-07-22 13:10:16.249175: 
+INFO: 2026-07-22 13:10:16.249234: 
+INFO: 2026-07-22 13:10:16.249268: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/observer.m.o
+
+INFO: 2026-07-22 13:10:16.255307: 
+INFO: 2026-07-22 13:10:16.255350: 
+INFO: 2026-07-22 13:10:16.255370: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/protocol.m.o
+
+INFO: 2026-07-22 13:10:16.499067: 
+INFO: 2026-07-22 13:10:16.499136: 
+INFO: 2026-07-22 13:10:16.499148: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/ns_number.m.o
+
+INFO: 2026-07-22 13:10:16.506850: 
+INFO: 2026-07-22 13:10:16.506890: 
+INFO: 2026-07-22 13:10:16.506903: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.m.o
+
+INFO: 2026-07-22 13:10:16.508710: 
+INFO: 2026-07-22 13:10:16.508734: 
+INFO: 2026-07-22 13:10:16.508744: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/input_stream_adapter.m.o
+
+INFO: 2026-07-22 13:10:16.527759: 
+INFO: 2026-07-22 13:10:16.527796: 
+INFO: 2026-07-22 13:10:16.527806: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c_bindings_generated.m.o
+
+INFO: 2026-07-22 13:10:16.528174: Running: clang -shared -Wl,-encryptable -undefined dynamic_lookup -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -target arm64-apple-darwin -mmacos-version-min=12 /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/include/dart_api_dl.c.o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.c.o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/input_stream_adapter.m.o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c.m.o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/observer.m.o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/ns_number.m.o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/protocol.m.o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/obj/src/objective_c_bindings_generated.m.o -o /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/objective_c.dylib
+
+INFO: 2026-07-22 13:10:16.704905: 
+INFO: 2026-07-22 13:10:16.704957: 
+INFO: 2026-07-22 13:10:16.704969: Generated /Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/9fb02c5622/objective_c.dylib
+
