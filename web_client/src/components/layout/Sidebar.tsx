@@ -43,24 +43,34 @@ export function Sidebar() {
             </div>
 
             <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-                {navigation.filter(item => userRole && item.roles.includes(userRole)).map((item) => {
-                    const isActive = pathname.startsWith(item.href)
-                    return (
-                        <Link
-                            key={item.name}
-                            href={item.href}
-                            className={cn(
-                                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                                isActive
-                                    ? "bg-indigo-600/10 text-indigo-400"
-                                    : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
-                            )}
-                        >
-                            <item.icon className={cn("w-5 h-5", isActive ? "text-indigo-400" : "text-slate-500")} />
-                            {item.name}
-                        </Link>
-                    )
-                })}
+                {(() => {
+                    const visibleItems = navigation.filter(item => userRole && item.roles.includes(userRole))
+                    const activeItem = visibleItems.reduce((prev, current) => {
+                        if (pathname.startsWith(current.href) && current.href.length > (prev?.href.length || 0)) {
+                            return current
+                        }
+                        return prev
+                    }, null as any)
+
+                    return visibleItems.map((item) => {
+                        const isActive = activeItem?.name === item.name
+                        return (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className={cn(
+                                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                                    isActive
+                                        ? "bg-indigo-600/10 text-indigo-400"
+                                        : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
+                                )}
+                            >
+                                <item.icon className={cn("w-5 h-5", isActive ? "text-indigo-400" : "text-slate-500")} />
+                                {item.name}
+                            </Link>
+                        )
+                    })
+                })()}
             </div>
 
             <div className="p-4 border-t border-slate-800 space-y-1">

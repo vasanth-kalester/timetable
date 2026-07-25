@@ -53,6 +53,8 @@ model AcademicYear {
   status     String   @default("draft") // draft, ready, frozen, archived
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  timetables Timetable[]
 }
 
 model Department {
@@ -350,6 +352,166 @@ model Session {
   weeklyOccurrence   Int      @default(1)
   schedulingPriority Int      @default(0)
   status             String   @default("pending")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  candidateSlots     CandidateSlot[]
+  timetableEntries   TimetableEntry[]
+  changes            TimetableChange[]
+  substitutionRequests SubstitutionRequest[]
+}
+
+model CandidateSlot {
+  id                 String   @id @default(cuid())
+  sessionId          String
+  dayOfWeek          Int
+  period             Int
+  roomId             String?
+  facultyId          String
+  sectionId          String
+  penaltyScore       Int      @default(0)
+  satisfiedConstraints String? // JSON string
+  violatedConstraints  String? // JSON string
+  priority           Int      @default(0)
+  status             String   @default("valid") // valid, invalid, selected
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  session            Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model ConstraintConfiguration {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  description String?
+  type        String   @default("hard") // hard, soft
+  isActive    Boolean  @default(true)
+  weight      Int      @default(1) // For soft constraints penalty
+  parameters  String?  // JSON string for configurable parameters
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Timetable {
+  id                 String   @id @default(cuid())
+  academicYearId     String
+  name               String
+  status             String   @default("draft") // draft, approved, published, archived
+  optimizationScore  Float    @default(0.0)
+  conflicts          Int      @default(0)
+  roomUtilization    Float    @default(0.0)
+  facultySatisfaction Float   @default(0.0)
+  studentSatisfaction Float   @default(0.0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  academicYear       AcademicYear @relation(fields: [academicYearId], references: [id])
+  entries            TimetableEntry[]
+  versions           TimetableVersion[]
+}
+
+model TimetableEntry {
+  id                 String   @id @default(cuid())
+  timetableId        String
+  sessionId          String
+  dayOfWeek          Int
+  period             Int
+  roomId             String?
+  facultyId          String
+  sectionId          String
+  isManualEdit       Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  timetable          Timetable @relation(fields: [timetableId], references: [id], onDelete: Cascade)
+  session            Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model TimetableVersion {
+  id                 String   @id @default(cuid())
+  timetableId        String
+  versionNumber      Int
+  publishedAt        DateTime @default(now())
+  publishedBy        String
+  reason             String?
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  timetable          Timetable @relation(fields: [timetableId], references: [id], onDelete: Cascade)
+  changes            TimetableChange[]
+}
+
+model TimetableChange {
+  id                 String   @id @default(cuid())
+  versionId          String
+  sessionId          String
+  changedBy          String
+  changeType         String   // substitution, room_change, cancellation, rescheduled
+  reason             String
+  oldDay             Int?
+  oldPeriod          Int?
+  oldRoomId          String?
+  oldFacultyId       String?
+  newDay             Int?
+  newPeriod          Int?
+  newRoomId          String?
+  newFacultyId       String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  version            TimetableVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  session            Session          @relation(fields: [sessionId], references: [id])
+}
+
+model SubstitutionRequest {
+  id                 String   @id @default(cuid())
+  sessionId          String
+  originalFacultyId  String
+  substituteFacultyId String?
+  date               DateTime
+  status             String   @default("pending") // pending, approved, rejected
+  reason             String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  session            Session  @relation(fields: [sessionId], references: [id])
+}
+
+model Event {
+  id                 String   @id @default(cuid())
+  title              String
+  description        String?
+  eventType          String   // guest_lecture, workshop, exam, etc.
+  date               DateTime
+  startPeriod        Int
+  endPeriod          Int
+  roomId             String?
+  departmentId       String?
+  status             String   @default("scheduled") // scheduled, cancelled, completed
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model RoomMaintenance {
+  id                 String   @id @default(cuid())
+  roomId             String
+  reason             String
+  startDate          DateTime
+  endDate            DateTime
+  status             String   @default("active") // active, completed, cancelled
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Notification {
+  id                 String   @id @default(cuid())
+  userId             String
+  title              String
+  message            String
+  type               String   // alert, info, substitution, change
+  isRead             Boolean  @default(false)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }

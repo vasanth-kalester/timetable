@@ -6,7 +6,7 @@ import json
 import os
 
 from .core.config import settings
-from .routers import auth, users, academic, infrastructure, audit, faculty, validation, session
+from .routers import auth, users, academic, infrastructure, audit, faculty, validation, session, constraints, candidate_slots, timetables, operations, analytics, planning, digital_twin, workflow, communication, calendar, executive
 
 # Configure logging
 logging.basicConfig(
@@ -69,6 +69,17 @@ app.include_router(audit.router, prefix=API_PREFIX)
 app.include_router(faculty.router, prefix=API_PREFIX)
 app.include_router(validation.router, prefix=API_PREFIX)
 app.include_router(session.router, prefix=API_PREFIX)
+app.include_router(constraints.router, prefix=API_PREFIX)
+app.include_router(candidate_slots.router, prefix=API_PREFIX)
+app.include_router(timetables.router, prefix=API_PREFIX)
+app.include_router(operations.router, prefix=API_PREFIX)
+app.include_router(analytics.router, prefix=API_PREFIX)
+app.include_router(planning.router, prefix=API_PREFIX)
+app.include_router(digital_twin.router, prefix=API_PREFIX)
+app.include_router(workflow.router, prefix=API_PREFIX)
+app.include_router(communication.router, prefix=API_PREFIX)
+app.include_router(calendar.router, prefix=API_PREFIX)
+app.include_router(executive.router, prefix=API_PREFIX)
 
 
 @app.get("/", tags=["Health"])
