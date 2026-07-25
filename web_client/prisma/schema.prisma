@@ -1,0 +1,355 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("student") // student, faculty, hod, principal, admin
+  approvalStatus String   @default("pending") // pending, approved, rejected
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  profile       Profile?
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  firstName String?
+  lastName  String?
+  avatarUrl String?
+  collegeId String?
+  departmentId String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model College {
+  id           String   @id @default(cuid())
+  name         String
+  code         String   @unique
+  address      String?
+  logo         String?
+  timeZone     String?  @default("UTC")
+  academicYear String?
+  workingDays  Int?     @default(5)
+  workingHours Int?     @default(8)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AcademicYear {
+  id         String   @id @default(cuid())
+  name       String   @unique // e.g., "2026-2027"
+  startDate  DateTime
+  endDate    DateTime
+  status     String   @default("draft") // draft, ready, frozen, archived
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Department {
+  id              String   @id @default(cuid())
+  name            String
+  code            String   @unique
+  collegeId       String?
+  status          String   @default("active") // active, inactive, archived, deleted
+  readinessStatus String   @default("draft") // draft, configured, ready, frozen
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Program {
+  id             String   @id @default(cuid())
+  name           String   // e.g., "B.E CSE"
+  code           String   @unique
+  degree         String   // e.g., "B.E", "B.Tech", "M.E"
+  durationYears  Int
+  totalSemesters Int
+  intakeCapacity Int
+  departmentId   String
+  status         String   @default("active")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Semester {
+  id        String   @id @default(cuid())
+  name      String   // e.g., "Semester 3"
+  number    Int
+  programId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Section {
+  id             String   @id @default(cuid())
+  name           String   // e.g., "A"
+  intake         Int
+  semesterId     String
+  homeClassroomId String?
+  status         String   @default("active")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Building {
+  id        String   @id @default(cuid())
+  name      String
+  code      String   @unique
+  type      String   @default("academic") // academic, laboratory, seminar_hall, auditorium
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Classroom {
+  id           String   @id @default(cuid())
+  roomNumber   String   @unique
+  capacity     Int
+  isSmart      Boolean  @default(false)
+  hasProjector Boolean  @default(false)
+  hasAC        Boolean  @default(false)
+  buildingId   String
+  status       String   @default("active")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Laboratory {
+  id             String   @id @default(cuid())
+  name           String
+  code           String   @unique
+  capacity       Int
+  equipmentCount Int      @default(0)
+  labType        String
+  buildingId     String
+  departmentId   String
+  status         String   @default("active")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model WorkingDay {
+  id        String   @id @default(cuid())
+  dayOfWeek String   @unique // Monday, Tuesday, etc.
+  isEnabled Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PeriodTemplate {
+  id        String   @id @default(cuid())
+  name      String   @unique // e.g., "Regular", "Saturday", "Exam"
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PeriodConfiguration {
+  id         String   @id @default(cuid())
+  name       String   // e.g., "Period 1", "Lunch"
+  startTime  String   // e.g., "09:00"
+  endTime    String   // e.g., "09:50"
+  isBreak    Boolean  @default(false)
+  templateId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model InstitutionPolicy {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  role      String
+  action    String   // e.g., "CREATE", "UPDATE", "DELETE", "FREEZE"
+  entity    String   // e.g., "AcademicYear", "Section"
+  entityId  String
+  oldValue  String?
+  newValue  String?
+  reason    String?
+  timestamp DateTime @default(now())
+}
+
+// Legacy models kept for compatibility with Next.js web client for now
+model Subject {
+  id           String   @id @default(cuid())
+  name         String
+  code         String
+  departmentId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Class {
+  id           String   @id @default(cuid())
+  name         String
+  departmentId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Room {
+  id        String   @id @default(cuid())
+  name      String
+  collegeId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TimetableSlot {
+  id         String   @id @default(cuid())
+  day        String
+  time       String
+  subjectId  String
+  staffId    String
+  classId    String
+  roomId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Faculty {
+  id              String   @id @default(cuid())
+  employeeId      String   @unique
+  name            String
+  email           String   @unique
+  phone           String?
+  departmentId    String
+  designation     String?
+  qualification   String?
+  experience      Int?
+  joiningDate     DateTime?
+  employmentType  String   @default("Full Time")
+  status          String   @default("Active")
+  schedulingReadiness String @default("Draft") // Draft, Ready, Incomplete
+  skills          String?  // JSON or comma separated list of skills/subjects
+  profilePicture  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  crossDepartments CrossDepartmentTeaching[]
+  schedulingProfile SchedulingProfile?
+  availability      Availability[]
+  leaves            Leave[]
+}
+
+model CrossDepartmentTeaching {
+  id           String   @id @default(cuid())
+  facultyId    String
+  departmentId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  faculty      Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+}
+
+model SchedulingProfile {
+  id                    String   @id @default(cuid())
+  facultyId             String   @unique
+  maxPeriodsPerDay      Int      @default(4)
+  maxPeriodsPerWeek     Int      @default(18)
+  maxConsecutiveClasses Int      @default(2)
+  preferredFreeDay      String?
+  avoidFirstHour        Boolean  @default(false)
+  avoidLastHour         Boolean  @default(false)
+  canHandleTheory       Boolean  @default(true)
+  canHandleLabs         Boolean  @default(true)
+  canHandleTutorials    Boolean  @default(true)
+  preferredBuildings    String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  faculty               Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+}
+
+model Availability {
+  id          String   @id @default(cuid())
+  facultyId   String
+  dayOfWeek   Int
+  period      Int
+  isAvailable Boolean  @default(true)
+  reason      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  faculty     Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+}
+
+model Leave {
+  id          String   @id @default(cuid())
+  facultyId   String
+  leaveType   String
+  startDate   DateTime
+  endDate     DateTime
+  status      String   @default("Pending")
+  reason      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  faculty     Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+}
+
+model ValidationReport {
+  id                   String   @id @default(cuid())
+  academicYearId       String
+  institutionReadiness Float    @default(0.0)
+  departmentReadiness  Float    @default(0.0)
+  sectionReadiness     Float    @default(0.0)
+  sessionReadiness     Float    @default(0.0)
+  overallReadiness     Float    @default(0.0)
+  status               String   @default("failed")
+  createdAt            DateTime @default(now())
+  
+  results              ValidationResult[]
+}
+
+model ValidationResult {
+  id          String   @id @default(cuid())
+  reportId    String
+  category    String
+  entityId    String?
+  entityName  String?
+  status      String
+  message     String
+  suggestion  String?
+  severity    String
+  createdAt   DateTime @default(now())
+
+  report      ValidationReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id                 String   @id @default(cuid())
+  sessionCode        String   @unique
+  subjectId          String
+  facultyId          String
+  sectionId          String
+  programId          String
+  semesterId         String
+  departmentId       String
+  sessionType        String
+  duration           Int      @default(1)
+  studentGroupId     String?
+  laboratoryId       String?
+  homeClassroomId    String?
+  weeklyOccurrence   Int      @default(1)
+  schedulingPriority Int      @default(0)
+  status             String   @default("pending")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

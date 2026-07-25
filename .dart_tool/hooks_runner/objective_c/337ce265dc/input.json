@@ -4,9 +4,9 @@
     "build_asset_types": [],
     "linking_enabled": false
   },
-  "out_dir_shared": "/Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/shared/objective_c/build/",
-  "out_file": "/Users/intern/Desktop/vasanthp/.dart_tool/hooks_runner/objective_c/337ce265dc/output.json",
+  "out_dir_shared": "C:\\Users\\vasan\\OneDrive\\Desktop\\timetable\\time\\.dart_tool\\hooks_runner\\shared\\objective_c\\build\\",
+  "out_file": "C:\\Users\\vasan\\OneDrive\\Desktop\\timetable\\time\\.dart_tool\\hooks_runner\\objective_c\\337ce265dc\\output.json",
   "package_name": "objective_c",
-  "package_root": "/Users/intern/.pub-cache/hosted/pub.dev/objective_c-9.4.1/",
+  "package_root": "C:\\Users\\vasan\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\objective_c-9.4.1\\",
   "user_defines": {}
 }

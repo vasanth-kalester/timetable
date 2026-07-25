@@ -13,6 +13,12 @@ class UserEntity {
   final String? avatarUrl;
   final String? phone;
   final String? semester;
+  final String? collegeId;
+  final String? departmentId;
+  final String approvalStatus;
+
+  /// API-provided permission list. Used for fine-grained access control.
+  final List<String> permissions;
 
   const UserEntity({
     required this.id,
@@ -27,50 +33,39 @@ class UserEntity {
     this.avatarUrl,
     this.phone,
     this.semester,
+    this.collegeId,
+    this.departmentId,
+    this.approvalStatus = 'approved',
+    this.permissions = const [],
   });
 
+  /// Check if this user has the given permission key.
+  /// For admin role, always returns true. For others, checks the API-provided list.
   bool hasPermission(String permissionKey) {
     if (role == UserRole.admin) return true;
+    return permissions.contains(permissionKey);
+  }
 
-    final Map<UserRole, Set<String>> rolePermissions = {
-      UserRole.student: {
-        'view_timetable',
-        'view_attendance',
-        'view_exams',
-        'edit_self_profile',
-      },
-      UserRole.faculty: {
-        'view_timetable',
-        'view_attendance',
-        'take_attendance',
-        'view_assigned_timetable',
-        'apply_leave',
-        'book_classrooms',
-        'edit_self_profile',
-      },
-      UserRole.hod: {
-        'view_timetable',
-        'view_attendance',
-        'take_attendance',
-        'view_assigned_timetable',
-        'apply_leave',
-        'book_classrooms',
-        'dept_management',
-        'faculty_workload',
-        'timetable_approval',
-        'approve_leave',
-        'edit_self_profile',
-      },
-      UserRole.principal: {
-        'view_timetable',
-        'view_attendance',
-        'campus_dashboard',
-        'campus_analytics',
-        'generate_reports',
-        'edit_self_profile',
-      },
-    };
+  /// Convenience: check if user can access a given route based on role.
+  bool get isPrincipal => role == UserRole.principal;
+  bool get isHod => role == UserRole.hod;
+  bool get isFaculty => role == UserRole.faculty;
+  bool get isStudent => role == UserRole.student;
+  bool get isAdmin => role == UserRole.admin;
 
-    return rolePermissions[role]?.contains(permissionKey) ?? false;
+  /// Returns the role-appropriate home dashboard route.
+  String get dashboardRoute {
+    switch (role) {
+      case UserRole.principal:
+        return '/principal-dashboard';
+      case UserRole.hod:
+        return '/hod-dashboard';
+      case UserRole.faculty:
+        return '/faculty-dashboard';
+      case UserRole.student:
+        return '/student-dashboard';
+      case UserRole.admin:
+        return '/dashboard';
+    }
   }
 }

@@ -3,10 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final connectivityStreamProvider = StreamProvider<ConnectivityResult>((ref) {
-  return Connectivity().onConnectivityChanged.map((results) {
-    if (results.isEmpty) return ConnectivityResult.none;
-    return results.first;
-  });
+  return Connectivity().onConnectivityChanged;
 });
 
 class NetworkInfoService {
@@ -14,8 +11,8 @@ class NetworkInfoService {
 
   Future<bool> get isConnected async {
     final result = await _connectivity.checkConnectivity();
-    return result.contains(ConnectivityResult.mobile) ||
-        result.contains(ConnectivityResult.wifi) ||
-        result.contains(ConnectivityResult.ethernet);
+    return result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi ||
+        result == ConnectivityResult.ethernet;
   }
 }

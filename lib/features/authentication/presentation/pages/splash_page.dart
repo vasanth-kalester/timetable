@@ -14,7 +14,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _initSession();
+    Future.microtask(() => _initSession());
   }
 
   Future<void> _initSession() async {

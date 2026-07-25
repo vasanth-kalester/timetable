@@ -113,7 +113,7 @@ class _CsvImportDialogState extends ConsumerState<CsvImportDialog> {
                 if (_parseResult!.parseErrors.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Container(
-                    maxHeight: 80,
+                    constraints: const BoxConstraints(maxHeight: 80),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.red.shade900.withOpacity(0.2),

@@ -1,100 +1,121 @@
+import 'package:dio/dio.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../models/user_model.dart';
 import '../../../../core/utils/app_failure.dart';
+import '../../../../core/services/api_client.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
+  final ApiClient _apiClient;
 
-  AuthRepositoryImpl({required this.localDataSource});
+  AuthRepositoryImpl({required this.localDataSource})
+      : _apiClient = ApiClient();
 
   @override
   Future<(UserEntity?, AppFailure?)> login({
     required String identifier,
     required String password,
   }) async {
-    // Basic verification check
-    if (password.length < 4) {
-      return (null, const ValidationFailure('Password must be at least 4 characters long.'));
+    try {
+      final response = await _apiClient.dio.post(
+        '/auth/login',
+        data: {'identifier': identifier, 'password': password},
+      );
+
+      final data = response.data as Map<String, dynamic>;
+      final userJson = data['user'] as Map<String, dynamic>;
+      final user = UserModel.fromJson(userJson);
+      final accessToken = data['access_token'] as String;
+      final refreshToken = data['refresh_token'] as String;
+
+      await localDataSource.saveTokens(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+      await localDataSource.cacheUser(user);
+
+      return (user, null);
+    } on DioException catch (e) {
+      final failure = _apiClient.mapDioExceptionToFailure(e);
+      return (null, failure);
+    } catch (e) {
+      return (null, ServerFailure(e.toString(), null, null));
     }
-
-    // Determine mock role automatically from identifier format
-    UserRole role = UserRole.student;
-    String name = 'Alex Rivera';
-    String dept = 'Computer Science & Eng';
-    String? roll;
-    String? empId;
-    String? desig;
-
-    final lowerId = identifier.trim().toLowerCase();
-    if (lowerId.contains('admin')) {
-      role = UserRole.admin;
-      name = 'System Administrator';
-      desig = 'Lead Campus Admin';
-    } else if (lowerId.contains('principal') || lowerId.contains('head')) {
-      role = UserRole.principal;
-      name = 'Dr. Margaret Hamilton';
-      desig = 'Principal & Dean';
-    } else if (lowerId.contains('hod')) {
-      role = UserRole.hod;
-      name = 'Dr. Alan Turing';
-      desig = 'Head of Department';
-      empId = 'EMP-CS-101';
-    } else if (lowerId.startsWith('emp') || lowerId.contains('faculty') || lowerId.contains('prof')) {
-      role = UserRole.faculty;
-      name = 'Prof. Grace Hopper';
-      desig = 'Associate Professor';
-      empId = 'EMP-CS-202';
-    } else {
-      role = UserRole.student;
-      name = 'Alex Rivera';
-      roll = '21CS089';
-    }
-
-    final user = UserModel(
-      id: 'usr_${DateTime.now().millisecondsSinceEpoch}',
-      identifier: identifier,
-      fullName: name,
-      email: lowerId.contains('@') ? lowerId : '$lowerId@eduflow.campus',
-      role: role,
-      department: dept,
-      designation: desig,
-      rollNumber: roll,
-      employeeId: empId,
-      phone: '+1 (555) 019-2834',
-      semester: role == UserRole.student ? 'Semester 5' : null,
-    );
-
-    // Save tokens and cache user locally
-    await localDataSource.saveTokens(
-      accessToken: 'jwt_access_mock_${user.id}',
-      refreshToken: 'jwt_refresh_mock_${user.id}',
-    );
-    await localDataSource.cacheUser(user);
-
-    return (user, null);
   }
 
   @override
   Future<(UserEntity?, AppFailure?)> autoLogin() async {
+    // Check if a token is stored locally
     final token = await localDataSource.getAccessToken();
-    if (token == null) {
-      return (null, const AuthFailure('No active session token found'));
+    if (token == null || token.isEmpty) {
+      return (null, const AuthFailure('No active session'));
     }
 
-    final cachedUser = localDataSource.getCachedUser();
-    if (cachedUser != null) {
-      return (cachedUser, null);
+    // Try to fetch fresh user data from API using stored token
+    try {
+      final response = await _apiClient.dio.get('/users/me');
+      final userJson = response.data as Map<String, dynamic>;
+      final user = UserModel.fromJson(userJson);
+      await localDataSource.cacheUser(user);
+      return (user, null);
+    } on DioException catch (e) {
+      // If 401, token expired — try token refresh
+      if (e.response?.statusCode == 401) {
+        return await _tryRefreshToken();
+      }
+      // If no internet, return cached user
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout) {
+        final cachedUser = localDataSource.getCachedUser();
+        if (cachedUser != null) return (cachedUser, null);
+      }
+      return (null, _apiClient.mapDioExceptionToFailure(e));
+    }
+  }
+
+  Future<(UserEntity?, AppFailure?)> _tryRefreshToken() async {
+    final refreshToken = await localDataSource.getRefreshToken();
+    if (refreshToken == null || refreshToken.isEmpty) {
+      await localDataSource.clearTokens();
+      return (null, const AuthFailure('Session expired. Please log in again.'));
     }
 
-    return (null, const AuthFailure('Session expired or invalid'));
+    try {
+      final response = await _apiClient.dio.post(
+        '/auth/refresh',
+        data: {'refresh_token': refreshToken},
+      );
+      final data = response.data as Map<String, dynamic>;
+      final newAccessToken = data['access_token'] as String;
+      final newRefreshToken = data['refresh_token'] as String;
+      final userJson = data['user'] as Map<String, dynamic>;
+      final user = UserModel.fromJson(userJson);
+
+      await localDataSource.saveTokens(
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      );
+      await localDataSource.cacheUser(user);
+      return (user, null);
+    } on DioException catch (e) {
+      await localDataSource.clearTokens();
+      await localDataSource.clearCachedUser();
+      return (null, _apiClient.mapDioExceptionToFailure(e));
+    }
   }
 
   @override
   Future<void> logout() async {
-    await localDataSource.clearTokens();
-    await localDataSource.clearCachedUser();
+    try {
+      await _apiClient.dio.post('/auth/logout');
+    } catch (_) {
+      // Ignore errors on logout — always clear local session
+    } finally {
+      await localDataSource.clearTokens();
+      await localDataSource.clearCachedUser();
+    }
   }
 
   @override
@@ -103,8 +124,19 @@ class AuthRepositoryImpl implements AuthRepository {
     required String otp,
     required String newPassword,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return otp == '123456' || otp.length == 6;
+    try {
+      await _apiClient.dio.post(
+        '/auth/reset-password',
+        data: {
+          'email': identifier,
+          'otp': otp,
+          'new_password': newPassword,
+        },
+      );
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   @override

@@ -12,21 +12,21 @@ class AuthLocalDataSource {
   static const String biometricEnabledKey = 'biometric_enabled';
 
   Future<void> saveTokens({required String accessToken, required String refreshToken}) async {
-    await _secureStorage.write(key: accessTokenKey, value: accessToken);
-    await _secureStorage.write(key: refreshTokenKey, value: refreshToken);
+    await HiveCacheService.cacheData(HiveCacheService.userAuthBox, accessTokenKey, accessToken);
+    await HiveCacheService.cacheData(HiveCacheService.userAuthBox, refreshTokenKey, refreshToken);
   }
 
   Future<String?> getAccessToken() async {
-    return await _secureStorage.read(key: accessTokenKey);
+    return HiveCacheService.getCachedData(HiveCacheService.userAuthBox, accessTokenKey) as String?;
   }
 
   Future<String?> getRefreshToken() async {
-    return await _secureStorage.read(key: refreshTokenKey);
+    return HiveCacheService.getCachedData(HiveCacheService.userAuthBox, refreshTokenKey) as String?;
   }
 
   Future<void> clearTokens() async {
-    await _secureStorage.delete(key: accessTokenKey);
-    await _secureStorage.delete(key: refreshTokenKey);
+    await HiveCacheService.cacheData(HiveCacheService.userAuthBox, accessTokenKey, null);
+    await HiveCacheService.cacheData(HiveCacheService.userAuthBox, refreshTokenKey, null);
   }
 
   Future<void> cacheUser(UserModel user) async {

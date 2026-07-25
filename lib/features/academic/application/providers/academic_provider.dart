@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/academic_entities.dart';
 import '../../domain/repositories/academic_repository.dart';
 import '../../data/repositories/academic_repository_impl.dart';
-import '../../timetable/domain/models/scheduling_models.dart';
+import '../../../timetable/domain/models/scheduling_models.dart';
 
 final academicRepositoryProvider = Provider<AcademicRepository>((ref) {
   return AcademicRepositoryImpl();

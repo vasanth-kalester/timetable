@@ -1,0 +1,5 @@
+C:\Users\vasan\OneDrive\Desktop\timetable\time\web_client\src\app\campus\page.tsx
+  115:51 `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+  115:60 `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+C:\Users\vasan\OneDrive\Desktop\timetable\time\web_client\src\components\ui\Input.tsx
+  4:18 An interface declaring no members is equivalent to its supertype.

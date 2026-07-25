@@ -25,12 +25,15 @@ class OfflineBannerWrapper extends ConsumerWidget {
                 color: Colors.amber.shade900,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.wifi_off_rounded, color: Colors.white, size: 16),
-                    SizedBox(width: 8),
-                    Text(
-                      'Offline Mode — Changes will sync when connection returns',
-                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                  children: [
+                    const Icon(Icons.wifi_off_rounded, color: Colors.white, size: 16),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        'Offline Mode — Changes will sync when connection returns',
+                        style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ],
                 ),

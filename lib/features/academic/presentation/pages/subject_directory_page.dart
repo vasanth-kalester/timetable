@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers/academic_provider.dart';
-import '../../timetable/domain/models/scheduling_models.dart';
+import '../../../timetable/domain/models/scheduling_models.dart';
 
 class SubjectDirectoryPage extends ConsumerWidget {
   const SubjectDirectoryPage({super.key});
