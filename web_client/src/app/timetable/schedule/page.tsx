@@ -54,9 +54,8 @@ export default function TimetableSchedulePage() {
         setError(null)
         try {
             if (dId) {
-                const [clsRes, subRes, rmRes, stfRes, slotRes] = await Promise.all([
+                const [clsRes, rmRes, stfRes, slotRes] = await Promise.all([
                     getClasses(dId),
-                    getSubjects(dId),
                     getRooms(cId),
                     getStaff(cId, 'approved', 'faculty', dId),
                     getTimetableSlots(dId)
@@ -64,9 +63,12 @@ export default function TimetableSchedulePage() {
 
                 if (clsRes.classes) {
                     setClasses(clsRes.classes)
-                    if (clsRes.classes.length > 0) setSelectedClass(clsRes.classes[0].id)
+                    if (clsRes.classes.length > 0) {
+                        setSelectedClass(clsRes.classes[0].id)
+                        const subRes = await getSubjects(clsRes.classes[0].id)
+                        if (subRes.subjects) setSubjects(subRes.subjects)
+                    }
                 }
-                if (subRes.subjects) setSubjects(subRes.subjects)
                 if (rmRes.rooms) setRooms(rmRes.rooms)
                 if (stfRes.staff) setStaff(stfRes.staff)
                 if (slotRes.slots) setSlots(slotRes.slots)
@@ -77,6 +79,17 @@ export default function TimetableSchedulePage() {
         } finally {
             setIsLoading(false)
         }
+    }
+
+    const handleClassChange = async (classId: string) => {
+        setSelectedClass(classId)
+        const subRes = await getSubjects(classId)
+        if (subRes.subjects) setSubjects(subRes.subjects)
+    }
+
+    const handleSubjectChange = (subjectId: string) => {
+        const subject = subjects.find(s => s.id === subjectId)
+        setNewSlot({ ...newSlot, subjectId, staffId: subject?.staffId || "" })
     }
 
     const handleSaveSlot = async () => {
@@ -140,7 +153,7 @@ export default function TimetableSchedulePage() {
                     <select
                         className="h-10 rounded-md border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-50"
                         value={selectedClass}
-                        onChange={e => setSelectedClass(e.target.value)}
+                        onChange={e => handleClassChange(e.target.value)}
                     >
                         {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
@@ -184,7 +197,7 @@ export default function TimetableSchedulePage() {
                                             <div key={`${day}-${time}`} className="p-2 border-r border-slate-800 last:border-0 min-h-[120px] relative group/cell">
                                                 {isEditing ? (
                                                     <div className="absolute inset-1 bg-slate-950 border border-indigo-500/50 rounded-lg p-2 z-20 flex flex-col gap-2 shadow-xl">
-                                                        <select className="text-xs bg-slate-900 border border-slate-800 rounded p-1" value={newSlot.subjectId} onChange={e => setNewSlot({ ...newSlot, subjectId: e.target.value })}>
+                                                        <select className="text-xs bg-slate-900 border border-slate-800 rounded p-1" value={newSlot.subjectId} onChange={e => handleSubjectChange(e.target.value)}>
                                                             <option value="">Subject...</option>
                                                             {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                                                         </select>

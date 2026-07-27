@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -192,7 +192,9 @@ model Subject {
   id           String   @id @default(cuid())
   name         String
   code         String
-  departmentId String
+  classId      String
+  staffId      String?
+  hoursPerWeek Int      @default(3)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

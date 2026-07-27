@@ -12,119 +12,6 @@ import {
 import { getPrincipalDashboardData } from "@/app/actions/principal"
 
 // ─── Data ────────────────────────────────────────────────────
-const kpiGroups = [
-    {
-        label: "Academic",
-        items: [
-            { name: "Total Students", value: "3,840", trend: "+12", up: true },
-            { name: "Total Faculty", value: "186", trend: "+3", up: true },
-            { name: "Departments", value: "8", trend: "stable", up: true },
-            { name: "Active Classes Today", value: "198", trend: "-2", up: false },
-        ]
-    },
-    {
-        label: "Attendance",
-        items: [
-            { name: "Student Attendance", value: "92%", trend: "+1%", up: true },
-            { name: "Faculty Attendance", value: "96%", trend: "stable", up: true },
-            { name: "Classes Conducted", value: "191/198", trend: "", up: true },
-            { name: "Pending Attendance", value: "7", trend: "-5", up: true },
-        ]
-    },
-    {
-        label: "Infrastructure",
-        items: [
-            { name: "Rooms Occupied", value: "124/150", trend: "", up: true },
-            { name: "Labs Active", value: "18/22", trend: "", up: true },
-            { name: "Available Rooms", value: "26", trend: "+4", up: true },
-            { name: "Maintenance Issues", value: "4", trend: "+2", up: false },
-        ]
-    },
-    {
-        label: "Examinations",
-        items: [
-            { name: "Upcoming Exams", value: "3", trend: "", up: true },
-            { name: "Results Published", value: "12", trend: "+2", up: true },
-            { name: "Pending Evaluations", value: "8", trend: "-3", up: true },
-            { name: "Hall Allocations", value: "Done", trend: "", up: true },
-        ]
-    },
-    {
-        label: "Administration",
-        items: [
-            { name: "Pending Approvals", value: "12", trend: "+3", up: false },
-            { name: "Leave Requests", value: "5", trend: "", up: false },
-            { name: "Room Requests", value: "3", trend: "", up: true },
-            { name: "Event Requests", value: "4", trend: "", up: true },
-        ]
-    }
-]
-
-const todayOverview = [
-    { icon: CheckCircle2, text: "198 Classes Scheduled", color: "text-emerald-400" },
-    { icon: CheckCircle2, text: "191 Classes Completed", color: "text-emerald-400" },
-    { icon: AlertTriangle, text: "6 Faculty on Leave", color: "text-amber-400" },
-    { icon: RefreshCw, text: "2 Substitute Classes", color: "text-blue-400" },
-    { icon: Wrench, text: "4 Maintenance Issues", color: "text-red-400" },
-    { icon: GraduationCap, text: "3 Guest Lectures", color: "text-indigo-400" },
-    { icon: BookOpen, text: "1 Seminar", color: "text-purple-400" },
-]
-
-const timeline = [
-    { time: "08:30", event: "Faculty Attendance Completed", type: "success" },
-    { time: "09:00", event: "Classes Started", type: "success" },
-    { time: "09:40", event: "Projector Failure — Room B203", type: "warning" },
-    { time: "10:15", event: "Faculty Leave Approved — Dr. Rao", type: "info" },
-    { time: "11:00", event: "Hackathon Started — CS Dept", type: "success" },
-    { time: "12:20", event: "Classroom Changed — EEE 3A", type: "info" },
-    { time: "01:15", event: "Emergency Notification Sent", type: "danger" },
-]
-
-const pendingApprovals = [
-    { title: "Faculty Leave — Dr. Priya", dept: "CSE", date: "24 Jul", priority: "High", by: "Prof. Priya Nair", status: "Pending" },
-    { title: "Room Booking — Seminar Hall", dept: "ECE", date: "25 Jul", priority: "Medium", by: "HOD Shankar", status: "Pending" },
-    { title: "Timetable Publication — S5", dept: "IT", date: "23 Jul", priority: "High", by: "Timetable Committee", status: "Review" },
-    { title: "Event Approval — Tech Fest", dept: "All", date: "30 Jul", priority: "High", by: "Student Council", status: "Pending" },
-    { title: "Exam Schedule — Nov 2026", dept: "All", date: "26 Jul", priority: "Medium", by: "Exam Cell", status: "Pending" },
-]
-
-const departments = [
-    { name: "Computer Science", attendance: 94, faculty: 28, students: 612, pendingLeaves: 2, conflicts: 0, examPerf: 91 },
-    { name: "Electronics", attendance: 91, faculty: 25, students: 510, pendingLeaves: 2, conflicts: 1, examPerf: 88 },
-    { name: "Mechanical", attendance: 81, faculty: 22, students: 450, pendingLeaves: 3, conflicts: 2, examPerf: 79 },
-    { name: "Civil", attendance: 88, faculty: 18, students: 380, pendingLeaves: 0, conflicts: 0, examPerf: 85 },
-    { name: "Information Technology", attendance: 93, faculty: 20, students: 540, pendingLeaves: 1, conflicts: 0, examPerf: 90 },
-    { name: "Electrical", attendance: 86, faculty: 16, students: 320, pendingLeaves: 2, conflicts: 1, examPerf: 83 },
-]
-
-const faculty = [
-    { name: "Dr. Priya Nair", dept: "CSE", classes: 3, workload: "Normal", status: "Present" },
-    { name: "Prof. Shankar M", dept: "ECE", classes: 4, workload: "High", status: "Present" },
-    { name: "Dr. Rao K", dept: "MECH", classes: 0, workload: "—", status: "On Leave" },
-    { name: "Ms. Divya S", dept: "CIVIL", classes: 2, workload: "Normal", status: "Present" },
-    { name: "Mr. Arun P", dept: "IT", classes: 3, workload: "Normal", status: "Late" },
-]
-
-const healthScore = {
-    overall: 94,
-    label: "Excellent",
-    breakdown: [
-        { name: "Attendance", score: 93 },
-        { name: "Infrastructure", score: 97 },
-        { name: "Scheduling", score: 96 },
-        { name: "Exams", score: 91 },
-        { name: "Operations", score: 95 },
-    ]
-}
-
-const recentActivity = [
-    { time: "09:15", text: "Faculty Leave Approved", icon: Check },
-    { time: "09:40", text: "Room B203 Booking Changed", icon: RefreshCw },
-    { time: "10:20", text: "Exam Schedule Published", icon: FileText },
-    { time: "11:00", text: "Attendance Completed — CSE", icon: CheckCircle2 },
-    { time: "12:45", text: "Tech Fest Event Approved", icon: Award },
-]
-
 const quickActions = [
     { label: "View Timetable", icon: Calendar, color: "bg-indigo-600 hover:bg-indigo-700" },
     { label: "Approve Leaves", icon: CheckCircle2, color: "bg-emerald-600 hover:bg-emerald-700" },
@@ -178,6 +65,10 @@ function AttendanceBar({ pct, label }: { pct: number; label: string }) {
     )
 }
 
+const IconMap: Record<string, any> = {
+    Building2, Activity, AlertTriangle, CheckCircle2, Clock, Calendar, BarChart3, FileText, Bell, Settings, Search, ChevronRight, BookOpen, FlaskConical, Wrench, ClipboardList, TrendingUp, TrendingDown, Star, Megaphone, MapPin, LogOut, Shield, Award, Zap, Eye, Check, X, RefreshCw, Download, Loader2, Users, GraduationCap
+}
+
 // ─── Main Component ───────────────────────────────────────────
 export function PrincipalDashboard({ firstName }: { firstName: string }) {
     const [activeTab, setActiveTab] = useState<"monitor" | "approve" | "act">("monitor")
@@ -198,22 +89,61 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
 
     const collegeName = dbData?.college?.name || "Your Institution"
 
-    // Override mock KPI items with real DB values where available
-    const realKpiGroups = kpiGroups.map(group => {
-        if (group.label === "Academic") {
-            return {
-                ...group, items: [
-                    { name: "Total Students", value: dbData?.stats?.totalStudents?.toString() || "0", trend: "stable", up: true },
-                    { name: "Total Faculty", value: dbData?.stats?.totalFaculty?.toString() || "0", trend: "stable", up: true },
-                    { name: "Departments", value: dbData?.stats?.totalDepartments?.toString() || "0", trend: "stable", up: true },
-                    { name: "Active Classes Today", value: "0", trend: "pending", up: true },
-                ]
-            }
+    const realKpiGroups = [
+        {
+            label: "Academic",
+            items: [
+                { name: "Total Students", value: dbData?.stats?.totalStudents?.toString() || "0", trend: "", up: true },
+                { name: "Total Faculty", value: dbData?.stats?.totalFaculty?.toString() || "0", trend: "", up: true },
+                { name: "Departments", value: dbData?.stats?.totalDepartments?.toString() || "0", trend: "", up: true },
+                { name: "Active Classes Today", value: "0", trend: "", up: true },
+            ]
+        },
+        {
+            label: "Attendance",
+            items: [
+                { name: "Student Attendance", value: "0%", trend: "", up: true },
+                { name: "Faculty Attendance", value: "0%", trend: "", up: true },
+                { name: "Classes Conducted", value: "0/0", trend: "", up: true },
+                { name: "Pending Attendance", value: "0", trend: "", up: true },
+            ]
+        },
+        {
+            label: "Infrastructure",
+            items: [
+                { name: "Rooms Occupied", value: "0/0", trend: "", up: true },
+                { name: "Labs Active", value: "0/0", trend: "", up: true },
+                { name: "Available Rooms", value: "0", trend: "", up: true },
+                { name: "Maintenance Issues", value: "0", trend: "", up: false },
+            ]
+        },
+        {
+            label: "Examinations",
+            items: [
+                { name: "Upcoming Exams", value: "0", trend: "", up: true },
+                { name: "Results Published", value: "0", trend: "", up: true },
+                { name: "Pending Evaluations", value: "0", trend: "", up: true },
+                { name: "Hall Allocations", value: "Pending", trend: "", up: true },
+            ]
+        },
+        {
+            label: "Administration",
+            items: [
+                { name: "Pending Approvals", value: "0", trend: "", up: false },
+                { name: "Leave Requests", value: "0", trend: "", up: false },
+                { name: "Room Requests", value: "0", trend: "", up: true },
+                { name: "Event Requests", value: "0", trend: "", up: true },
+            ]
         }
-        return group
-    })
+    ]
 
-    const realDepartments = dbData?.departments?.length > 0 ? dbData.departments : departments
+    const realDepartments = dbData?.departments || []
+    const todayOverview = dbData?.todayOverview || []
+    const timeline = dbData?.timeline || []
+    const pendingApprovals = dbData?.pendingApprovals || []
+    const faculty = dbData?.faculty || []
+    const healthScore = dbData?.healthScore || { overall: 0, label: "No Data", breakdown: [] }
+    const recentActivity = dbData?.recentActivity || []
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -297,12 +227,17 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                                 <CardTitle className="flex items-center gap-2"><Activity className="w-4 h-4 text-indigo-400" />Today's Campus Overview</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
-                                {todayOverview.map((item, i) => (
-                                    <div key={i} className="flex items-center gap-3">
-                                        <item.icon className={`w-4 h-4 flex-shrink-0 ${item.color}`} />
-                                        <span className="text-sm text-slate-300">{item.text}</span>
-                                    </div>
-                                ))}
+                                {todayOverview.length === 0 ? (
+                                    <p className="text-sm text-slate-500 text-center py-4">No campus events scheduled for today.</p>
+                                ) : todayOverview.map((item: any, i: number) => {
+                                    const IconComponent = typeof item.icon === 'string' ? IconMap[item.icon] || Activity : item.icon || Activity;
+                                    return (
+                                        <div key={i} className="flex items-center gap-3">
+                                            <IconComponent className={`w-4 h-4 flex-shrink-0 ${item.color}`} />
+                                            <span className="text-sm text-slate-300">{item.text}</span>
+                                        </div>
+                                    )
+                                })}
                             </CardContent>
                         </Card>
 
@@ -313,7 +248,9 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    {timeline.map((item, i) => {
+                                    {timeline.length === 0 ? (
+                                        <p className="text-sm text-slate-500 text-center py-4">No timeline events recorded yet.</p>
+                                    ) : timeline.map((item: any, i: number) => {
                                         const dotColor = item.type === "success" ? "bg-emerald-500"
                                             : item.type === "warning" ? "bg-amber-500"
                                                 : item.type === "danger" ? "bg-red-500" : "bg-blue-500"
@@ -356,7 +293,7 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                                     <p className="text-emerald-400 font-bold text-lg mt-1">{healthScore.label}</p>
                                 </div>
                                 <div className="space-y-2">
-                                    {healthScore.breakdown.map(b => (
+                                    {healthScore.breakdown.map((b: any) => (
                                         <div key={b.name}>
                                             <p className="text-xs text-slate-500 mb-1">{b.name}</p>
                                             <HealthBar score={b.score} />
@@ -376,7 +313,7 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                             <Button variant="ghost" size="sm" className="text-indigo-400 hover:text-indigo-300">View All <ChevronRight className="w-4 h-4 ml-1" /></Button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            {departments.map(dept => (
+                            {realDepartments.map((dept: any) => (
                                 <Card key={dept.name} className="border-slate-800/60 bg-slate-900/40 hover:border-indigo-500/40 transition-colors cursor-pointer group">
                                     <CardContent className="p-5">
                                         <div className="flex items-start justify-between mb-3">
@@ -422,7 +359,7 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Student Attendance by Dept</p>
-                                    {departments.map(dept => (
+                                    {realDepartments.map((dept: any) => (
                                         <AttendanceBar key={dept.name} pct={dept.attendance} label={dept.name} />
                                     ))}
                                 </div>
@@ -469,7 +406,9 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {faculty.map((f, i) => (
+                                        {faculty.length === 0 ? (
+                                            <tr><td colSpan={5} className="py-6 text-center text-slate-500">No faculty data available.</td></tr>
+                                        ) : faculty.map((f: any, i: number) => (
                                             <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
                                                 <td className="py-3 font-medium text-slate-200">{f.name}</td>
                                                 <td className="py-3 text-slate-400">{f.dept}</td>
@@ -593,15 +532,20 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                         <CardHeader><CardTitle className="flex items-center gap-2"><Activity className="w-4 h-4 text-indigo-400" />Recent Activity</CardTitle></CardHeader>
                         <CardContent>
                             <div className="space-y-3">
-                                {recentActivity.map((a, i) => (
-                                    <div key={i} className="flex items-center gap-3">
-                                        <span className="text-xs font-mono text-indigo-400 w-12 flex-shrink-0">{a.time}</span>
-                                        <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0">
-                                            <a.icon className="w-3 h-3 text-slate-400" />
+                                {recentActivity.length === 0 ? (
+                                    <p className="text-sm text-slate-500 text-center py-4">No recent activity.</p>
+                                ) : recentActivity.map((a: any, i: number) => {
+                                    const IconComponent = typeof a.icon === 'string' ? IconMap[a.icon] || Activity : a.icon || Activity;
+                                    return (
+                                        <div key={i} className="flex items-center gap-3">
+                                            <span className="text-xs font-mono text-indigo-400 w-12 flex-shrink-0">{a.time}</span>
+                                            <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0">
+                                                <IconComponent className="w-3 h-3 text-slate-400" />
+                                            </div>
+                                            <span className="text-sm text-slate-300">{a.text}</span>
                                         </div>
-                                        <span className="text-sm text-slate-300">{a.text}</span>
-                                    </div>
-                                ))}
+                                    )
+                                })}
                             </div>
                         </CardContent>
                     </Card>
@@ -616,7 +560,13 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                         <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">Filter</Button>
                     </div>
                     <div className="space-y-3">
-                        {pendingApprovals.map((item, i) => (
+                        {pendingApprovals.length === 0 ? (
+                            <div className="text-center py-12 bg-slate-900/40 border border-slate-800/60 rounded-xl">
+                                <CheckCircle2 className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                                <h3 className="text-lg font-medium text-slate-300">All caught up!</h3>
+                                <p className="text-slate-500">There are no pending approvals at this time.</p>
+                            </div>
+                        ) : pendingApprovals.map((item: any, i: number) => (
                             <Card key={i} className="border-slate-800/60 bg-slate-900/40 hover:border-slate-700 transition-colors">
                                 <CardContent className="p-5">
                                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

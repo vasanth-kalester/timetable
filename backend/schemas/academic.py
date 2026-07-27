@@ -131,12 +131,8 @@ class SectionResponse(SectionBase):
 class SubjectBase(BaseModel):
     name: str
     code: str
-    credits: int = 3
-    weeklyHours: int = 3
-    category: str = "core"
-    subjectType: str = "theory"
-    departmentId: str
-    status: str = "active"
+    classId: str
+    staffId: Optional[str] = None
 
 class SubjectCreate(SubjectBase):
     pass
@@ -144,11 +140,7 @@ class SubjectCreate(SubjectBase):
 class SubjectUpdate(BaseModel):
     name: Optional[str] = None
     code: Optional[str] = None
-    credits: Optional[int] = None
-    weeklyHours: Optional[int] = None
-    category: Optional[str] = None
-    subjectType: Optional[str] = None
-    status: Optional[str] = None
+    staffId: Optional[str] = None
 
 class SubjectResponse(SubjectBase):
     id: str

@@ -19,6 +19,7 @@ class Timetable(Base):
     updatedAt = Column("updatedAt", Integer, default=lambda: int(time.time() * 1000))
 
     entries = relationship("TimetableEntry", back_populates="timetable", cascade="all, delete-orphan")
+    versions = relationship("TimetableVersion", back_populates="timetable", cascade="all, delete-orphan")
 
 class TimetableEntry(Base):
     __tablename__ = "TimetableEntry"

@@ -2,36 +2,6 @@
 
 import prisma from "@/lib/prisma"
 
-// --- Subjects ---
-export async function getSubjects(departmentId: string) {
-    try {
-        const subjects = await prisma.subject.findMany({
-            where: { departmentId },
-            orderBy: { name: 'asc' }
-        })
-        return { subjects }
-    } catch (e: any) {
-        return { error: e.message || "Failed to fetch subjects" }
-    }
-}
-
-export async function createSubject(data: { name: string, code: string, departmentId: string }) {
-    try {
-        const subject = await prisma.subject.create({ data })
-        return { subject }
-    } catch (e: any) {
-        return { error: e.message || "Failed to create subject" }
-    }
-}
-
-export async function deleteSubject(id: string) {
-    try {
-        await prisma.subject.delete({ where: { id } })
-        return { success: true }
-    } catch (e: any) {
-        return { error: e.message || "Failed to delete subject" }
-    }
-}
 
 // --- Classes ---
 export async function getClasses(departmentId: string) {
@@ -61,6 +31,49 @@ export async function deleteClass(id: string) {
         return { success: true }
     } catch (e: any) {
         return { error: e.message || "Failed to delete class" }
+    }
+}
+
+// --- Subjects ---
+export async function getSubjects(classId: string) {
+    try {
+        const subjects = await prisma.subject.findMany({
+            where: { classId },
+            orderBy: { name: 'asc' }
+        })
+        return { subjects }
+    } catch (e: any) {
+        return { error: e.message || "Failed to fetch subjects" }
+    }
+}
+
+export async function createSubject(data: { name: string, code: string, classId: string, staffId?: string }) {
+    try {
+        const subject = await prisma.subject.create({ data })
+        return { subject }
+    } catch (e: any) {
+        return { error: e.message || "Failed to create subject" }
+    }
+}
+
+export async function updateSubjectStaff(id: string, staffId: string | null) {
+    try {
+        const subject = await prisma.subject.update({
+            where: { id },
+            data: { staffId }
+        })
+        return { subject }
+    } catch (e: any) {
+        return { error: e.message || "Failed to update subject staff" }
+    }
+}
+
+export async function deleteSubject(id: string) {
+    try {
+        await prisma.subject.delete({ where: { id } })
+        return { success: true }
+    } catch (e: any) {
+        return { error: e.message || "Failed to delete subject" }
     }
 }
 

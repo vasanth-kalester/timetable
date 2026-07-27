@@ -1,33 +1,46 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
-import { Building2, Monitor, MapPin, CheckCircle2, XCircle, Users, Plus, X } from "lucide-react"
+import { Building2, Monitor, MapPin, CheckCircle2, XCircle, Users, Plus, X, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
+import { getRooms, addRoom } from "@/app/actions/campus"
 
 export default function CampusPage() {
     const [rooms, setRooms] = useState<{ id: string, name: string, type: string, capacity: string, status: string, equipment: string[], block: string, floor: string }[]>([])
     const [isAddingRoom, setIsAddingRoom] = useState(false)
     const [newRoom, setNewRoom] = useState({ name: "", type: "Classroom", capacity: "", block: "A", floor: "1" })
+    const [isLoading, setIsLoading] = useState(true)
+    const [isSaving, setIsSaving] = useState(false)
 
-    const handleAddRoom = () => {
+    const fetchRooms = async () => {
+        setIsLoading(true)
+        const result = await getRooms()
+        if (result.rooms) {
+            setRooms(result.rooms)
+        }
+        setIsLoading(false)
+    }
+
+    useEffect(() => {
+        fetchRooms()
+    }, [])
+
+    const handleAddRoom = async () => {
         if (!newRoom.name || !newRoom.capacity) return
 
-        const room = {
-            id: Math.random().toString(36).substr(2, 9),
-            name: newRoom.name,
-            type: newRoom.type,
-            capacity: newRoom.capacity,
-            status: "Available",
-            equipment: ["Projector", "Whiteboard"],
-            block: newRoom.block,
-            floor: newRoom.floor
-        }
+        setIsSaving(true)
+        const result = await addRoom(newRoom)
 
-        setRooms([...rooms, room])
-        setIsAddingRoom(false)
-        setNewRoom({ name: "", type: "Classroom", capacity: "", block: "A", floor: "1" })
+        if (result.success) {
+            await fetchRooms()
+            setIsAddingRoom(false)
+            setNewRoom({ name: "", type: "Classroom", capacity: "", block: "A", floor: "1" })
+        } else {
+            alert(result.error || "Failed to add room")
+        }
+        setIsSaving(false)
     }
 
     return (
@@ -56,7 +69,7 @@ export default function CampusPage() {
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-slate-400">{stat.title}</p>
-                                <p className="text-2xl font-bold text-slate-50">{stat.value}</p>
+                                <p className="text-2xl font-bold text-slate-50">{isLoading ? "-" : stat.value}</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -101,8 +114,8 @@ export default function CampusPage() {
                                     <Input placeholder="Floor" value={newRoom.floor} onChange={e => setNewRoom({ ...newRoom, floor: e.target.value })} className="w-1/2" />
                                 </div>
                             </div>
-                            <Button onClick={handleAddRoom} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-10">
-                                Save Room
+                            <Button onClick={handleAddRoom} disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-10">
+                                {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Room"}
                             </Button>
                         </div>
                     </CardContent>
@@ -110,7 +123,11 @@ export default function CampusPage() {
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {rooms.length === 0 ? (
+                {isLoading ? (
+                    <div className="lg:col-span-2 p-12 flex justify-center">
+                        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+                    </div>
+                ) : rooms.length === 0 ? (
                     <div className="lg:col-span-2 p-8 text-center text-slate-500 border border-slate-800/60 bg-slate-900/40 rounded-xl">
                         No rooms available. Click &quot;Add Room&quot; to create one.
                     </div>
@@ -145,7 +162,7 @@ export default function CampusPage() {
                                         <span className="text-xs text-slate-500">Equipment</span>
                                         <div className="flex items-center gap-1 mt-0.5">
                                             <Monitor className="w-3.5 h-3.5 text-slate-400" />
-                                            <span className="text-sm font-medium text-slate-300 truncate">{room.equipment.join(", ")}</span>
+                                            <span className="text-sm font-medium text-slate-300 truncate">{room.equipment.length > 0 ? room.equipment.join(", ") : "None"}</span>
                                         </div>
                                     </div>
                                 </div>

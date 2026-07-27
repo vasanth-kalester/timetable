@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'class_subjects_screen.dart';
 
 class PrincipalTimetableDashboard extends ConsumerWidget {
   const PrincipalTimetableDashboard({super.key});
@@ -19,6 +20,17 @@ class PrincipalTimetableDashboard extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Institution Timetable Dashboard'),
         actions: [
+          FilledButton.tonalIcon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ClassSubjectsScreen()),
+              );
+            },
+            icon: const Icon(Icons.book),
+            label: const Text('Class Subjects'),
+          ),
+          const SizedBox(width: 8),
           FilledButton.icon(
             onPressed: () {},
             icon: const Icon(Icons.publish),

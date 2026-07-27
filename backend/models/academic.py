@@ -55,11 +55,7 @@ class Subject(Base):
     id = Column(String, primary_key=True, index=True)
     name = Column(String, nullable=False)
     code = Column(String, unique=True, nullable=False)
-    credits = Column(Integer, nullable=False, default=3)
-    weeklyHours = Column("weeklyHours", Integer, nullable=False, default=3)
-    category = Column(String, nullable=False, default="core") # core, elective, open_elective
-    subjectType = Column("subjectType", String, nullable=False, default="theory") # theory, lab, tutorial, project
-    departmentId = Column("departmentId", String, nullable=False)
-    status = Column(String, default="active")
+    classId = Column("classId", String, nullable=False)
+    staffId = Column("staffId", String, nullable=True)
     createdAt = Column("createdAt", Integer)
     updatedAt = Column("updatedAt", Integer)

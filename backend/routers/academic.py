@@ -227,5 +227,50 @@ def update_section(sec_id: str, sec: SectionUpdate, db: Session = Depends(get_db
     db.commit()
     db.refresh(db_sec)
     
-    AuditService.log_action(db, current_user, "UPDATE", "Section", db_sec.id, old_value=old_value, new_value=update_data)
-    return db_sec
+# --- Subject ---
+from models.academic import Subject
+from schemas.academic import SubjectCreate, SubjectUpdate, SubjectResponse
+
+@router.get("/subjects", response_model=List[SubjectResponse])
+def get_subjects(classId: str = None, db: Session = Depends(get_db), _ = Depends(require_role("principal", "hod", "admin", "faculty"))):
+    query = db.query(Subject)
+    if classId:
+        query = query.filter(Subject.classId == classId)
+    return query.all()
+
+@router.post("/subjects", response_model=SubjectResponse)
+def create_subject(sub: SubjectCreate, db: Session = Depends(get_db), _ = Depends(require_role("principal", "hod", "admin"))):
+    db_sub = Subject(
+        id=str(uuid.uuid4()),
+        **sub.model_dump(),
+        createdAt=get_current_time(),
+        updatedAt=get_current_time()
+    )
+    db.add(db_sub)
+    db.commit()
+    db.refresh(db_sub)
+    return db_sub
+
+@router.put("/subjects/{sub_id}", response_model=SubjectResponse)
+def update_subject(sub_id: str, sub: SubjectUpdate, db: Session = Depends(get_db), _ = Depends(require_role("principal", "hod", "admin"))):
+    db_sub = db.query(Subject).filter(Subject.id == sub_id).first()
+    if not db_sub:
+        raise HTTPException(status_code=404, detail="Subject not found")
+        
+    for key, value in sub.model_dump(exclude_unset=True).items():
+        setattr(db_sub, key, value)
+        
+    db_sub.updatedAt = get_current_time()
+    db.commit()
+    db.refresh(db_sub)
+    return db_sub
+
+@router.delete("/subjects/{sub_id}")
+def delete_subject(sub_id: str, db: Session = Depends(get_db), _ = Depends(require_role("principal", "hod", "admin"))):
+    db_sub = db.query(Subject).filter(Subject.id == sub_id).first()
+    if not db_sub:
+        raise HTTPException(status_code=404, detail="Subject not found")
+        
+    db.delete(db_sub)
+    db.commit()
+    return {"success": True}

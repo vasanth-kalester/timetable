@@ -6,6 +6,7 @@ import { PrincipalDashboard } from "@/components/dashboard/PrincipalDashboard"
 import { HodDashboard } from "@/components/dashboard/HodDashboard"
 import { FacultyDashboard } from "@/components/dashboard/FacultyDashboard"
 import { StudentDashboard } from "@/components/dashboard/StudentDashboard"
+import { SuperAdminDashboard } from "@/components/dashboard/SuperAdminDashboard"
 import { Loader2 } from "lucide-react"
 
 export default function DashboardPage() {
@@ -22,6 +23,10 @@ export default function DashboardPage() {
 
     if (status === "loading") {
         return <div className="flex justify-center py-12 h-full items-center"><Loader2 className="w-8 h-8 animate-spin text-indigo-500" /></div>
+    }
+
+    if (userRole === 'admin') {
+        return <SuperAdminDashboard firstName={firstName} />
     }
 
     if (userRole === 'principal') {
