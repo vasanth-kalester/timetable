@@ -151,10 +151,10 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
             {/* ── Header ─────────────────────────────────── */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-50">
+                    <h1 className="text-3xl font-bold tracking-tight text-on-surface">
                         {greeting}, Dr. {firstName} 👋
                     </h1>
-                    <div className="flex flex-wrap gap-3 mt-2 text-sm text-slate-400">
+                    <div className="flex flex-wrap gap-3 mt-2 text-sm text-on-surface-variant">
                         <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5" /> {collegeName}</span>
                         <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> AY 2025–26</span>
                         <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {todayStr}</span>
@@ -162,24 +162,24 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-indigo-400"><Search className="w-4 h-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-amber-400 relative">
+                    <Button variant="ghost" size="icon" className="text-on-surface-variant hover:text-primary"><Search className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="icon" className="text-on-surface-variant hover:text-amber-600 relative">
                         <Bell className="w-4 h-4" />
-                        <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />
+                        <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-error rounded-full" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-200"><Settings className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="icon" className="text-on-surface-variant hover:text-on-surface"><Settings className="w-4 h-4" /></Button>
                 </div>
             </div>
 
             {/* ── Mode Switcher ──────────────────────────── */}
-            <div className="flex gap-2 p-1 bg-slate-900/60 rounded-xl border border-slate-800 w-fit">
+            <div className="flex gap-2 p-1 bg-surface-container-low rounded-xl border border-outline-variant w-fit">
                 {(["monitor", "approve", "act"] as const).map(mode => (
                     <button
                         key={mode}
                         onClick={() => setActiveTab(mode)}
                         className={`px-5 py-2 rounded-lg text-sm font-semibold capitalize transition-all ${activeTab === mode
-                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-                            : "text-slate-400 hover:text-slate-200"
+                            ? "bg-primary text-on-primary shadow-lg shadow-primary/20"
+                            : "text-on-surface-variant hover:text-on-surface"
                             }`}
                     >
                         {mode === "monitor" ? "📊 Monitor" : mode === "approve" ? "✅ Approve" : "⚡ Act"}
@@ -193,21 +193,21 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
 
                     {/* KPI Groups */}
                     {isLoading && (
-                        <div className="flex items-center gap-2 text-slate-500 text-sm">
+                        <div className="flex items-center gap-2 text-on-surface-variant text-sm">
                             <Loader2 className="w-4 h-4 animate-spin" /> Loading live data...
                         </div>
                     )}
                     {realKpiGroups.map(group => (
                         <div key={group.label}>
-                            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">{group.label}</h2>
+                            <h2 className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3">{group.label}</h2>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {group.items.map(kpi => (
-                                    <Card key={kpi.name} className="border-slate-800/60 bg-slate-900/40 hover:bg-slate-800/40 transition-colors">
+                                    <Card key={kpi.name} className="hover:border-outline transition-colors">
                                         <CardContent className="p-4">
-                                            <p className="text-xs text-slate-500 mb-1">{kpi.name}</p>
-                                            <p className="text-2xl font-bold text-slate-50">{kpi.value}</p>
+                                            <p className="text-xs text-on-surface-variant mb-1">{kpi.name}</p>
+                                            <p className="text-2xl font-bold text-on-surface">{kpi.value}</p>
                                             {kpi.trend && kpi.trend !== "stable" && (
-                                                <p className={`text-xs flex items-center gap-1 mt-1 ${kpi.up ? "text-emerald-400" : "text-red-400"}`}>
+                                                <p className={`text-xs flex items-center gap-1 mt-1 ${kpi.up ? "text-tertiary" : "text-error"}`}>
                                                     {kpi.up ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                                                     {kpi.trend}
                                                 </p>
@@ -222,19 +222,19 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                         {/* Today's Overview */}
-                        <Card className="border-slate-800/60 bg-slate-900/40">
+                        <Card>
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2"><Activity className="w-4 h-4 text-indigo-400" />Today's Campus Overview</CardTitle>
+                                <CardTitle className="flex items-center gap-2"><Activity className="w-4 h-4 text-primary" />Today's Campus Overview</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 {todayOverview.length === 0 ? (
-                                    <p className="text-sm text-slate-500 text-center py-4">No campus events scheduled for today.</p>
+                                    <p className="text-sm text-on-surface-variant text-center py-4">No campus events scheduled for today.</p>
                                 ) : todayOverview.map((item: any, i: number) => {
                                     const IconComponent = typeof item.icon === 'string' ? IconMap[item.icon] || Activity : item.icon || Activity;
                                     return (
                                         <div key={i} className="flex items-center gap-3">
                                             <IconComponent className={`w-4 h-4 flex-shrink-0 ${item.color}`} />
-                                            <span className="text-sm text-slate-300">{item.text}</span>
+                                            <span className="text-sm text-on-surface">{item.text}</span>
                                         </div>
                                     )
                                 })}
@@ -242,27 +242,27 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                         </Card>
 
                         {/* Live Timeline */}
-                        <Card className="border-slate-800/60 bg-slate-900/40">
+                        <Card>
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2"><Clock className="w-4 h-4 text-indigo-400" />Live Campus Timeline</CardTitle>
+                                <CardTitle className="flex items-center gap-2"><Clock className="w-4 h-4 text-primary" />Live Campus Timeline</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
                                     {timeline.length === 0 ? (
-                                        <p className="text-sm text-slate-500 text-center py-4">No timeline events recorded yet.</p>
+                                        <p className="text-sm text-on-surface-variant text-center py-4">No timeline events recorded yet.</p>
                                     ) : timeline.map((item: any, i: number) => {
-                                        const dotColor = item.type === "success" ? "bg-emerald-500"
+                                        const dotColor = item.type === "success" ? "bg-tertiary"
                                             : item.type === "warning" ? "bg-amber-500"
-                                                : item.type === "danger" ? "bg-red-500" : "bg-blue-500"
+                                                : item.type === "danger" ? "bg-error" : "bg-primary"
                                         return (
                                             <div key={i} className="flex gap-3 items-start">
                                                 <div className="flex flex-col items-center">
                                                     <div className={`w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0 ${dotColor}`} />
-                                                    {i < timeline.length - 1 && <div className="w-px flex-1 bg-slate-800 mt-1" style={{ minHeight: 20 }} />}
+                                                    {i < timeline.length - 1 && <div className="w-px flex-1 bg-outline-variant mt-1" style={{ minHeight: 20 }} />}
                                                 </div>
                                                 <div className="pb-2">
-                                                    <p className="text-xs font-mono text-indigo-400">{item.time}</p>
-                                                    <p className="text-sm text-slate-300">{item.event}</p>
+                                                    <p className="text-xs font-mono text-primary">{item.time}</p>
+                                                    <p className="text-sm text-on-surface">{item.event}</p>
                                                 </div>
                                             </div>
                                         )
@@ -272,30 +272,30 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                         </Card>
 
                         {/* Institution Health Score */}
-                        <Card className="border-indigo-500/20 bg-slate-900/40">
+                        <Card>
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2"><Star className="w-4 h-4 text-amber-400" />Institution Health Score</CardTitle>
+                                <CardTitle className="flex items-center gap-2"><Star className="w-4 h-4 text-amber-500" />Institution Health Score</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-center mb-6">
                                     <div className="relative inline-flex items-center justify-center">
                                         <svg className="w-32 h-32 -rotate-90" viewBox="0 0 100 100">
-                                            <circle cx="50" cy="50" r="40" fill="none" stroke="rgb(30,41,59)" strokeWidth="10" />
-                                            <circle cx="50" cy="50" r="40" fill="none" stroke="rgb(99,102,241)"
+                                            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-surface-container-high)" strokeWidth="10" />
+                                            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-primary)"
                                                 strokeWidth="10" strokeLinecap="round"
                                                 strokeDasharray={`${healthScore.overall * 2.51} 251`} />
                                         </svg>
                                         <div className="absolute text-center">
-                                            <p className="text-3xl font-black text-slate-50">{healthScore.overall}</p>
-                                            <p className="text-xs text-slate-500">/ 100</p>
+                                            <p className="text-3xl font-black text-on-surface">{healthScore.overall}</p>
+                                            <p className="text-xs text-on-surface-variant">/ 100</p>
                                         </div>
                                     </div>
-                                    <p className="text-emerald-400 font-bold text-lg mt-1">{healthScore.label}</p>
+                                    <p className="text-tertiary font-bold text-lg mt-1">{healthScore.label}</p>
                                 </div>
                                 <div className="space-y-2">
                                     {healthScore.breakdown.map((b: any) => (
                                         <div key={b.name}>
-                                            <p className="text-xs text-slate-500 mb-1">{b.name}</p>
+                                            <p className="text-xs text-on-surface-variant mb-1">{b.name}</p>
                                             <HealthBar score={b.score} />
                                         </div>
                                     ))}
@@ -307,40 +307,40 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                     {/* Dept Performance */}
                     <div>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-bold text-slate-50 flex items-center gap-2">
-                                <Building2 className="w-5 h-5 text-indigo-400" /> Department Performance
+                            <h2 className="text-lg font-bold text-on-surface flex items-center gap-2">
+                                <Building2 className="w-5 h-5 text-primary" /> Department Performance
                             </h2>
-                            <Button variant="ghost" size="sm" className="text-indigo-400 hover:text-indigo-300">View All <ChevronRight className="w-4 h-4 ml-1" /></Button>
+                            <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">View All <ChevronRight className="w-4 h-4 ml-1" /></Button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                             {realDepartments.map((dept: any) => (
-                                <Card key={dept.name} className="border-slate-800/60 bg-slate-900/40 hover:border-indigo-500/40 transition-colors cursor-pointer group">
+                                <Card key={dept.name} className="hover:border-primary/40 transition-colors cursor-pointer group">
                                     <CardContent className="p-5">
                                         <div className="flex items-start justify-between mb-3">
-                                            <h3 className="font-bold text-slate-200 group-hover:text-indigo-400 transition-colors">{dept.name}</h3>
-                                            <span className={`text-xs font-bold px-2 py-0.5 rounded ${dept.attendance >= 90 ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : dept.attendance >= 80 ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
+                                            <h3 className="font-bold text-on-surface group-hover:text-primary transition-colors">{dept.name}</h3>
+                                            <span className={`text-xs font-bold px-2 py-0.5 rounded ${dept.attendance >= 90 ? "bg-tertiary/10 text-tertiary border border-tertiary/20" : dept.attendance >= 80 ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" : "bg-error-container text-on-error-container border border-error/20"}`}>
                                                 {dept.attendance}%
                                             </span>
                                         </div>
                                         <AttendanceBar pct={dept.attendance} label="Attendance" />
                                         <div className="grid grid-cols-3 gap-2 mt-3 text-center">
                                             <div>
-                                                <p className="text-xs text-slate-500">Faculty</p>
-                                                <p className="font-bold text-slate-300">{dept.faculty}</p>
+                                                <p className="text-xs text-on-surface-variant">Faculty</p>
+                                                <p className="font-bold text-on-surface">{dept.faculty}</p>
                                             </div>
                                             <div>
-                                                <p className="text-xs text-slate-500">Students</p>
-                                                <p className="font-bold text-slate-300">{dept.students}</p>
+                                                <p className="text-xs text-on-surface-variant">Students</p>
+                                                <p className="font-bold text-on-surface">{dept.students}</p>
                                             </div>
                                             <div>
-                                                <p className="text-xs text-slate-500">Exam %</p>
-                                                <p className={`font-bold ${dept.examPerf >= 85 ? "text-emerald-400" : "text-amber-400"}`}>{dept.examPerf}%</p>
+                                                <p className="text-xs text-on-surface-variant">Exam %</p>
+                                                <p className={`font-bold ${dept.examPerf >= 85 ? "text-tertiary" : "text-amber-500"}`}>{dept.examPerf}%</p>
                                             </div>
                                         </div>
                                         {(dept.pendingLeaves > 0 || dept.conflicts > 0) && (
-                                            <div className="flex gap-3 mt-3 pt-3 border-t border-slate-800">
-                                                {dept.pendingLeaves > 0 && <span className="text-xs text-amber-400 flex items-center gap-1"><Clock className="w-3 h-3" />{dept.pendingLeaves} Leaves</span>}
-                                                {dept.conflicts > 0 && <span className="text-xs text-red-400 flex items-center gap-1"><AlertTriangle className="w-3 h-3" />{dept.conflicts} Conflicts</span>}
+                                            <div className="flex gap-3 mt-3 pt-3 border-t border-outline-variant">
+                                                {dept.pendingLeaves > 0 && <span className="text-xs text-amber-500 flex items-center gap-1"><Clock className="w-3 h-3" />{dept.pendingLeaves} Leaves</span>}
+                                                {dept.conflicts > 0 && <span className="text-xs text-error flex items-center gap-1"><AlertTriangle className="w-3 h-3" />{dept.conflicts} Conflicts</span>}
                                             </div>
                                         )}
                                     </CardContent>
@@ -350,31 +350,31 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                     </div>
 
                     {/* Attendance Analytics */}
-                    <Card className="border-slate-800/60 bg-slate-900/40">
+                    <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2"><BarChart3 className="w-4 h-4 text-indigo-400" />Attendance Analytics</CardTitle>
+                            <CardTitle className="flex items-center gap-2"><BarChart3 className="w-4 h-4 text-primary" />Attendance Analytics</CardTitle>
                             <CardDescription>Department-wise attendance breakdown</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Student Attendance by Dept</p>
+                                    <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-4">Student Attendance by Dept</p>
                                     {realDepartments.map((dept: any) => (
                                         <AttendanceBar key={dept.name} pct={dept.attendance} label={dept.name} />
                                     ))}
                                 </div>
                                 <div className="space-y-4">
-                                    <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
-                                        <p className="text-xs text-emerald-400 font-bold mb-1">Above Threshold (≥90%)</p>
-                                        <p className="text-2xl font-black text-emerald-400">CSE, IT, ECE</p>
+                                    <div className="p-4 rounded-xl bg-tertiary/10 border border-tertiary/20">
+                                        <p className="text-xs text-tertiary font-bold mb-1">Above Threshold (≥90%)</p>
+                                        <p className="text-2xl font-black text-tertiary">CSE, IT, ECE</p>
                                     </div>
-                                    <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
-                                        <p className="text-xs text-amber-400 font-bold mb-1">Below Threshold (&lt;85%)</p>
-                                        <p className="text-2xl font-black text-amber-400">MECH, EEE</p>
+                                    <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                                        <p className="text-xs text-amber-500 font-bold mb-1">Below Threshold (&lt;85%)</p>
+                                        <p className="text-2xl font-black text-amber-500">MECH, EEE</p>
                                     </div>
-                                    <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20">
-                                        <p className="text-xs text-red-400 font-bold mb-1">Missing Attendance Today</p>
-                                        <p className="text-2xl font-black text-red-400">7 Classes</p>
+                                    <div className="p-4 rounded-xl bg-error-container border border-error/20">
+                                        <p className="text-xs text-error font-bold mb-1">Missing Attendance Today</p>
+                                        <p className="text-2xl font-black text-error">7 Classes</p>
                                     </div>
                                 </div>
                             </div>
@@ -382,14 +382,14 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                     </Card>
 
                     {/* Faculty Overview */}
-                    <Card className="border-slate-800/60 bg-slate-900/40">
+                    <Card>
                         <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="flex items-center gap-2"><GraduationCap className="w-4 h-4 text-indigo-400" />Faculty Overview</CardTitle>
+                                <CardTitle className="flex items-center gap-2"><GraduationCap className="w-4 h-4 text-primary" />Faculty Overview</CardTitle>
                                 <div className="flex gap-3 text-sm">
-                                    <span className="text-emerald-400 font-bold">178 Present</span>
-                                    <span className="text-amber-400 font-bold">6 On Leave</span>
-                                    <span className="text-red-400 font-bold">2 Late</span>
+                                    <span className="text-tertiary font-bold">178 Present</span>
+                                    <span className="text-amber-500 font-bold">6 On Leave</span>
+                                    <span className="text-error font-bold">2 Late</span>
                                 </div>
                             </div>
                         </CardHeader>
@@ -397,7 +397,7 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead>
-                                        <tr className="text-xs uppercase text-slate-500 border-b border-slate-800">
+                                        <tr className="text-xs uppercase text-on-surface-variant border-b border-outline-variant">
                                             <th className="text-left py-2">Name</th>
                                             <th className="text-left py-2">Dept</th>
                                             <th className="text-center py-2">Classes Today</th>
@@ -407,14 +407,14 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                                     </thead>
                                     <tbody>
                                         {faculty.length === 0 ? (
-                                            <tr><td colSpan={5} className="py-6 text-center text-slate-500">No faculty data available.</td></tr>
+                                            <tr><td colSpan={5} className="py-6 text-center text-on-surface-variant">No faculty data available.</td></tr>
                                         ) : faculty.map((f: any, i: number) => (
-                                            <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
-                                                <td className="py-3 font-medium text-slate-200">{f.name}</td>
-                                                <td className="py-3 text-slate-400">{f.dept}</td>
-                                                <td className="py-3 text-center text-slate-300">{f.classes}</td>
+                                            <tr key={i} className="border-b border-outline-variant/40 hover:bg-surface-container-low">
+                                                <td className="py-3 font-medium text-on-surface">{f.name}</td>
+                                                <td className="py-3 text-on-surface-variant">{f.dept}</td>
+                                                <td className="py-3 text-center text-on-surface-variant">{f.classes}</td>
                                                 <td className="py-3 text-center">
-                                                    <span className={`text-xs font-bold ${f.workload === "High" ? "text-red-400" : "text-slate-400"}`}>{f.workload}</span>
+                                                    <span className={`text-xs font-bold ${f.workload === "High" ? "text-error" : "text-on-surface-variant"}`}>{f.workload}</span>
                                                 </td>
                                                 <td className="py-3 text-center"><StatusBadge s={f.status} /></td>
                                             </tr>
@@ -427,27 +427,27 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
 
                     {/* Timetable + Infrastructure + Examination row */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <Card className="border-slate-800/60 bg-slate-900/40">
-                            <CardHeader><CardTitle className="flex items-center gap-2 text-base"><Calendar className="w-4 h-4 text-indigo-400" />Timetable Control</CardTitle></CardHeader>
+                        <Card>
+                            <CardHeader><CardTitle className="flex items-center gap-2 text-base"><Calendar className="w-4 h-4 text-primary" />Timetable Control</CardTitle></CardHeader>
                             <CardContent className="space-y-3">
                                 {[
-                                    { label: "Current (Published)", status: "Active", color: "text-emerald-400" },
-                                    { label: "Draft — Sem 6", status: "In Review", color: "text-amber-400" },
-                                    { label: "Simulation S6-A", status: "0 Conflicts", color: "text-blue-400" },
+                                    { label: "Current (Published)", status: "Active", color: "text-tertiary" },
+                                    { label: "Draft — Sem 6", status: "In Review", color: "text-amber-500" },
+                                    { label: "Simulation S6-A", status: "0 Conflicts", color: "text-primary" },
                                 ].map((t, i) => (
-                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-slate-800/30 border border-slate-800/50">
-                                        <span className="text-sm text-slate-300">{t.label}</span>
+                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+                                        <span className="text-sm text-on-surface">{t.label}</span>
                                         <span className={`text-xs font-bold ${t.color}`}>{t.status}</span>
                                     </div>
                                 ))}
-                                <Button size="sm" className="w-full mt-2 bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600 hover:text-white transition-colors" onClick={() => alert("Timetable module coming soon!")}>
+                                <Button size="sm" className="w-full mt-2" variant="outline" onClick={() => alert("Timetable module coming soon!")}>
                                     Review & Publish
                                 </Button>
                             </CardContent>
                         </Card>
 
-                        <Card className="border-slate-800/60 bg-slate-900/40">
-                            <CardHeader><CardTitle className="flex items-center gap-2 text-base"><Building2 className="w-4 h-4 text-indigo-400" />Infrastructure</CardTitle></CardHeader>
+                        <Card>
+                            <CardHeader><CardTitle className="flex items-center gap-2 text-base"><Building2 className="w-4 h-4 text-primary" />Infrastructure</CardTitle></CardHeader>
                             <CardContent className="space-y-3">
                                 {[
                                     { label: "Rooms", value: "124 / 150", sub: "83% occupied" },
@@ -455,19 +455,19 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                                     { label: "Seminar Halls", value: "3 / 4", sub: "1 reserved" },
                                     { label: "Maintenance", value: "4 open", sub: "2 critical" },
                                 ].map((r, i) => (
-                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-slate-800/30 border border-slate-800/50">
+                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-outline-variant">
                                         <div>
-                                            <p className="text-sm font-medium text-slate-300">{r.label}</p>
-                                            <p className="text-xs text-slate-500">{r.sub}</p>
+                                            <p className="text-sm font-medium text-on-surface">{r.label}</p>
+                                            <p className="text-xs text-on-surface-variant">{r.sub}</p>
                                         </div>
-                                        <span className="text-sm font-bold text-slate-200">{r.value}</span>
+                                        <span className="text-sm font-bold text-on-surface">{r.value}</span>
                                     </div>
                                 ))}
                             </CardContent>
                         </Card>
 
-                        <Card className="border-slate-800/60 bg-slate-900/40">
-                            <CardHeader><CardTitle className="flex items-center gap-2 text-base"><ClipboardList className="w-4 h-4 text-indigo-400" />Examinations</CardTitle></CardHeader>
+                        <Card>
+                            <CardHeader><CardTitle className="flex items-center gap-2 text-base"><ClipboardList className="w-4 h-4 text-primary" />Examinations</CardTitle></CardHeader>
                             <CardContent className="space-y-3">
                                 {[
                                     { label: "Upcoming Exams", value: "3" },
@@ -476,9 +476,9 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                                     { label: "Pending Results", value: "8 Subjects" },
                                     { label: "Avg Pass %", value: "87%" },
                                 ].map((e, i) => (
-                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-slate-800/30 border border-slate-800/50">
-                                        <span className="text-sm text-slate-300">{e.label}</span>
-                                        <span className="text-sm font-bold text-slate-200">{e.value}</span>
+                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+                                        <span className="text-sm text-on-surface">{e.label}</span>
+                                        <span className="text-sm font-bold text-on-surface">{e.value}</span>
                                     </div>
                                 ))}
                             </CardContent>
@@ -487,39 +487,39 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
 
                     {/* Reports + Resource Utilization */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Card className="border-slate-800/60 bg-slate-900/40">
+                        <Card>
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2"><FileText className="w-4 h-4 text-indigo-400" />Reports Center</CardTitle>
+                                <CardTitle className="flex items-center gap-2"><FileText className="w-4 h-4 text-primary" />Reports Center</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-2 gap-3">
                                     {["Attendance", "Faculty", "Student", "Examination", "Infrastructure", "Timetable"].map(r => (
-                                        <Button key={r} variant="outline" size="sm" className="border-slate-700 hover:bg-slate-800 justify-between" onClick={() => alert(`Generating ${r} report...`)}>
+                                        <Button key={r} variant="outline" size="sm" className="justify-between" onClick={() => alert(`Generating ${r} report...`)}>
                                             <span>{r}</span>
-                                            <Download className="w-3 h-3 ml-2 text-slate-500" />
+                                            <Download className="w-3 h-3 ml-2 text-on-surface-variant" />
                                         </Button>
                                     ))}
                                 </div>
                             </CardContent>
                         </Card>
 
-                        <Card className="border-slate-800/60 bg-slate-900/40">
+                        <Card>
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2"><BarChart3 className="w-4 h-4 text-indigo-400" />Resource Utilization</CardTitle>
+                                <CardTitle className="flex items-center gap-2"><BarChart3 className="w-4 h-4 text-primary" />Resource Utilization</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Room Utilization</p>
+                                <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3">Room Utilization</p>
                                 {[
                                     { label: "Morning (8–1)", pct: 91 },
                                     { label: "Afternoon (1–5)", pct: 68 },
                                     { label: "Evening (5–8)", pct: 24 },
                                 ].map(r => (
                                     <div key={r.label} className="mb-3">
-                                        <div className="flex justify-between text-xs text-slate-400 mb-1">
+                                        <div className="flex justify-between text-xs text-on-surface-variant mb-1">
                                             <span>{r.label}</span><span className="font-bold">{r.pct}%</span>
                                         </div>
-                                        <div className="h-2.5 bg-slate-800 rounded-full overflow-hidden">
-                                            <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${r.pct}%` }} />
+                                        <div className="h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+                                            <div className="h-full bg-primary rounded-full" style={{ width: `${r.pct}%` }} />
                                         </div>
                                     </div>
                                 ))}
@@ -528,21 +528,21 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                     </div>
 
                     {/* Recent Activity */}
-                    <Card className="border-slate-800/60 bg-slate-900/40">
-                        <CardHeader><CardTitle className="flex items-center gap-2"><Activity className="w-4 h-4 text-indigo-400" />Recent Activity</CardTitle></CardHeader>
+                    <Card>
+                        <CardHeader><CardTitle className="flex items-center gap-2"><Activity className="w-4 h-4 text-primary" />Recent Activity</CardTitle></CardHeader>
                         <CardContent>
                             <div className="space-y-3">
                                 {recentActivity.length === 0 ? (
-                                    <p className="text-sm text-slate-500 text-center py-4">No recent activity.</p>
+                                    <p className="text-sm text-on-surface-variant text-center py-4">No recent activity.</p>
                                 ) : recentActivity.map((a: any, i: number) => {
                                     const IconComponent = typeof a.icon === 'string' ? IconMap[a.icon] || Activity : a.icon || Activity;
                                     return (
                                         <div key={i} className="flex items-center gap-3">
-                                            <span className="text-xs font-mono text-indigo-400 w-12 flex-shrink-0">{a.time}</span>
-                                            <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0">
-                                                <IconComponent className="w-3 h-3 text-slate-400" />
+                                            <span className="text-xs font-mono text-primary w-12 flex-shrink-0">{a.time}</span>
+                                            <div className="w-6 h-6 rounded-full bg-surface-container-low flex items-center justify-center flex-shrink-0">
+                                                <IconComponent className="w-3 h-3 text-on-surface-variant" />
                                             </div>
-                                            <span className="text-sm text-slate-300">{a.text}</span>
+                                            <span className="text-sm text-on-surface">{a.text}</span>
                                         </div>
                                     )
                                 })}
@@ -556,39 +556,39 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
             {activeTab === "approve" && (
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-bold text-slate-50">Pending Approvals <span className="ml-2 text-sm font-normal bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded">{pendingApprovals.length}</span></h2>
-                        <Button variant="outline" size="sm" className="border-slate-700 text-slate-400">Filter</Button>
+                        <h2 className="text-xl font-bold text-on-surface">Pending Approvals <span className="ml-2 text-sm font-normal bg-error-container text-on-error-container border border-error/20 px-2 py-0.5 rounded">{pendingApprovals.length}</span></h2>
+                        <Button variant="outline" size="sm">Filter</Button>
                     </div>
                     <div className="space-y-3">
                         {pendingApprovals.length === 0 ? (
-                            <div className="text-center py-12 bg-slate-900/40 border border-slate-800/60 rounded-xl">
-                                <CheckCircle2 className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                                <h3 className="text-lg font-medium text-slate-300">All caught up!</h3>
-                                <p className="text-slate-500">There are no pending approvals at this time.</p>
+                            <div className="text-center py-12 bg-surface-container-low border border-outline-variant rounded-xl">
+                                <CheckCircle2 className="w-12 h-12 text-on-surface-variant mx-auto mb-3" />
+                                <h3 className="text-lg font-medium text-on-surface">All caught up!</h3>
+                                <p className="text-on-surface-variant">There are no pending approvals at this time.</p>
                             </div>
                         ) : pendingApprovals.map((item: any, i: number) => (
-                            <Card key={i} className="border-slate-800/60 bg-slate-900/40 hover:border-slate-700 transition-colors">
+                            <Card key={i} className="hover:border-primary/40 transition-colors">
                                 <CardContent className="p-5">
                                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
                                                 <PriorityBadge p={item.priority} />
-                                                <h3 className="font-bold text-slate-200">{item.title}</h3>
+                                                <h3 className="font-bold text-on-surface">{item.title}</h3>
                                             </div>
-                                            <div className="flex flex-wrap gap-3 text-xs text-slate-500">
+                                            <div className="flex flex-wrap gap-3 text-xs text-on-surface-variant">
                                                 <span className="flex items-center gap-1"><Users className="w-3 h-3" />{item.by}</span>
                                                 <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{item.dept}</span>
                                                 <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{item.date}</span>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => alert(`Approved: ${item.title}`)}>
+                                            <Button size="sm" onClick={() => alert(`Approved: ${item.title}`)}>
                                                 <Check className="w-3 h-3 mr-1" /> Approve
                                             </Button>
-                                            <Button size="sm" variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10" onClick={() => alert(`Rejected: ${item.title}`)}>
+                                            <Button size="sm" variant="outline" className="border-error text-error hover:bg-error-container" onClick={() => alert(`Rejected: ${item.title}`)}>
                                                 <X className="w-3 h-3 mr-1" /> Reject
                                             </Button>
-                                            <Button size="sm" variant="ghost" className="text-slate-400 hover:text-indigo-400" onClick={() => alert(`Details: ${item.title}`)}>
+                                            <Button size="sm" variant="ghost" className="text-on-surface-variant hover:text-primary" onClick={() => alert(`Details: ${item.title}`)}>
                                                 <Eye className="w-3 h-3 mr-1" /> Details
                                             </Button>
                                         </div>
@@ -603,7 +603,7 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
             {/* ── ACT TAB ──────────────────────────────── */}
             {activeTab === "act" && (
                 <div className="space-y-6">
-                    <h2 className="text-xl font-bold text-slate-50">Quick Actions</h2>
+                    <h2 className="text-xl font-bold text-on-surface">Quick Actions</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {quickActions.map(action => (
                             <button
@@ -618,26 +618,26 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                     </div>
 
                     {/* Broadcast Notice */}
-                    <Card className="border-slate-800/60 bg-slate-900/40">
-                        <CardHeader><CardTitle className="flex items-center gap-2"><Megaphone className="w-4 h-4 text-amber-400" />Broadcast Notification</CardTitle></CardHeader>
+                    <Card>
+                        <CardHeader><CardTitle className="flex items-center gap-2"><Megaphone className="w-4 h-4 text-amber-500" />Broadcast Notification</CardTitle></CardHeader>
                         <CardContent className="space-y-3">
                             <textarea
                                 rows={3}
                                 placeholder="Type your campus-wide announcement here..."
-                                className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 text-sm text-on-surface placeholder-on-surface-variant resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                             />
                             <div className="flex gap-2">
-                                <Button className="bg-amber-600 hover:bg-amber-700 text-white" onClick={() => alert("Broadcast sent!")}>
+                                <Button onClick={() => alert("Broadcast sent!")}>
                                     <Megaphone className="w-4 h-4 mr-2" /> Send to All
                                 </Button>
-                                <Button variant="outline" className="border-slate-700 text-slate-400">Select Recipients</Button>
+                                <Button variant="outline">Select Recipients</Button>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Notification Center */}
-                    <Card className="border-slate-800/60 bg-slate-900/40">
-                        <CardHeader><CardTitle className="flex items-center gap-2"><Bell className="w-4 h-4 text-red-400" />Critical Notifications</CardTitle></CardHeader>
+                    <Card>
+                        <CardHeader><CardTitle className="flex items-center gap-2"><Bell className="w-4 h-4 text-error" />Critical Notifications</CardTitle></CardHeader>
                         <CardContent className="space-y-3">
                             {[
                                 { text: "Attendance below threshold in MECH Dept (81%)", type: "danger" },
@@ -645,8 +645,8 @@ export function PrincipalDashboard({ firstName }: { firstName: string }) {
                                 { text: "Lab 302 projector still not fixed", type: "warning" },
                                 { text: "Exam timetable clash detected — S6 EEE", type: "danger" },
                             ].map((n, i) => {
-                                const style = n.type === "danger" ? "border-red-500/20 bg-red-500/5 text-red-400"
-                                    : "border-amber-500/20 bg-amber-500/5 text-amber-400"
+                                const style = n.type === "danger" ? "border-error/20 bg-error-container text-on-error-container"
+                                    : "border-amber-500/20 bg-amber-500/10 text-amber-500"
                                 return (
                                     <div key={i} className={`flex items-start gap-3 p-3 rounded-lg border ${style}`}>
                                         <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />

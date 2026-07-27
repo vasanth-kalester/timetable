@@ -126,11 +126,11 @@ export default function DepartmentsPage() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-50">Departments</h1>
-                    <p className="text-slate-400 mt-2">Manage academic departments and faculties.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-on-surface">Departments</h1>
+                    <p className="text-on-surface-variant mt-2">Manage academic departments and faculties.</p>
                 </div>
                 {userRole === 'principal' && !isAdding && (
-                    <Button onClick={() => setIsAdding(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                    <Button onClick={() => setIsAdding(true)}>
                         <Plus className="w-4 h-4 mr-2" />
                         Add Department
                     </Button>
@@ -138,14 +138,14 @@ export default function DepartmentsPage() {
             </div>
 
             {error && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+                <div className="p-3 rounded-lg bg-error-container border border-error/20 text-on-error-container text-sm flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4" />
                     {error}
                 </div>
             )}
 
             {isAdding && (
-                <Card className="border-indigo-500/30 bg-indigo-500/5">
+                <Card className="border-primary/30 bg-primary/5">
                     <CardHeader>
                         <CardTitle className="text-lg">{editingId ? "Edit Department" : "New Department"}</CardTitle>
                         <CardDescription>Enter the department details below.</CardDescription>
@@ -153,7 +153,7 @@ export default function DepartmentsPage() {
                     <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-300">Department Name</label>
+                                <label className="text-sm font-medium text-on-surface-variant">Department Name</label>
                                 <Input
                                     placeholder="e.g. Computer Science"
                                     value={formData.name}
@@ -161,7 +161,7 @@ export default function DepartmentsPage() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-300">Department Code</label>
+                                <label className="text-sm font-medium text-on-surface-variant">Department Code</label>
                                 <Input
                                     placeholder="e.g. CS"
                                     value={formData.code}
@@ -171,7 +171,7 @@ export default function DepartmentsPage() {
                         </div>
                         <div className="flex justify-end gap-3 mt-6">
                             <Button variant="outline" onClick={cancelEdit} disabled={isSaving}>Cancel</Button>
-                            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white" onClick={handleSave} disabled={isSaving}>
+                            <Button onClick={handleSave} disabled={isSaving}>
                                 {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                                 Save Department
                             </Button>
@@ -180,39 +180,39 @@ export default function DepartmentsPage() {
                 </Card>
             )}
 
-            <Card className="border-slate-800/60 bg-slate-900/40">
+            <Card>
                 <CardContent className="p-0">
                     {isLoading ? (
                         <div className="flex justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+                            <Loader2 className="w-8 h-8 animate-spin text-primary" />
                         </div>
                     ) : departments.length === 0 ? (
                         <div className="text-center py-12">
-                            <Layers className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-                            <h3 className="text-lg font-medium text-slate-300">No departments found</h3>
-                            <p className="text-slate-500 mt-1">
+                            <Layers className="w-12 h-12 text-on-surface-variant mx-auto mb-4" />
+                            <h3 className="text-lg font-medium text-on-surface">No departments found</h3>
+                            <p className="text-on-surface-variant mt-1">
                                 {userRole === 'principal' ? "Get started by adding your first department." : "Your college hasn't added any departments yet."}
                             </p>
                         </div>
                     ) : (
-                        <div className="divide-y divide-slate-800/60">
+                        <div className="divide-y divide-outline-variant/40">
                             {departments.map((dept) => (
-                                <div key={dept.id} className="p-4 flex items-center justify-between hover:bg-slate-800/30 transition-colors">
+                                <div key={dept.id} className="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
-                                            <span className="font-bold text-indigo-400">{dept.code}</span>
+                                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+                                            <span className="font-bold text-primary">{dept.code}</span>
                                         </div>
                                         <div>
-                                            <h4 className="font-medium text-slate-200">{dept.name}</h4>
-                                            <p className="text-xs text-slate-500 mt-0.5">ID: {dept.id.split('-')[0]}</p>
+                                            <h4 className="font-medium text-on-surface">{dept.name}</h4>
+                                            <p className="text-xs text-on-surface-variant mt-0.5">ID: {dept.id.split('-')[0]}</p>
                                         </div>
                                     </div>
                                     {userRole === 'principal' && (
                                         <div className="flex items-center gap-2">
-                                            <Button variant="ghost" size="icon" className="text-slate-400 hover:text-indigo-400" onClick={() => startEdit(dept)}>
+                                            <Button variant="ghost" size="icon" className="text-on-surface-variant hover:text-primary" onClick={() => startEdit(dept)}>
                                                 <Pencil className="w-4 h-4" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" className="text-slate-400 hover:text-red-400" onClick={() => handleDelete(dept.id)}>
+                                            <Button variant="ghost" size="icon" className="text-on-surface-variant hover:text-error" onClick={() => handleDelete(dept.id)}>
                                                 <Trash2 className="w-4 h-4" />
                                             </Button>
                                         </div>

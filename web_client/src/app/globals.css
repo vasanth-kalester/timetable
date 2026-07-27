@@ -1,21 +1,51 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0f172a; /* slate-900 */
-  --color-foreground: #f8fafc; /* slate-50 */
-  --color-primary: #4f46e5; /* indigo-600 */
-  --color-primary-hover: #4338ca; /* indigo-700 */
-  --color-surface: #1e293b; /* slate-800 */
-  --color-surface-hover: #334155; /* slate-700 */
-  --color-border: #334155; /* slate-700 */
-  --color-muted: #94a3b8; /* slate-400 */
-  
+  /* Kinetic Enterprise Color Palette */
+  --color-background: #f9f9ff;
+  --color-on-background: #151c27;
+
+  --color-surface: #f9f9ff;
+  --color-surface-dim: #d3daea;
+  --color-surface-bright: #f9f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #ffffff;
+  --color-surface-container: #f9f9ff;
+  --color-surface-container-high: #f0f3ff;
+  --color-surface-container-highest: #e7eefe;
+  --color-on-surface: #000000;
+  --color-on-surface-variant: #000000;
+  --color-surface-variant: #f0f3ff;
+
+  --color-primary: #004ac6;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #2563eb;
+  --color-on-primary-container: #eeefff;
+
+  --color-secondary: #4b41e1;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #645efb;
+  --color-on-secondary-container: #fffbff;
+
+  --color-tertiary: #006329;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #007f36;
+  --color-on-tertiary-container: #c7ffca;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-outline: #737686;
+  --color-outline-variant: #c3c6d7;
+
   --font-sans: var(--font-inter);
 }
 
 :root {
-  --background: #0f172a;
-  --foreground: #f8fafc;
+  --background: #f9f9ff;
+  --foreground: #151c27;
 }
 
 body {
@@ -31,13 +61,16 @@ body {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #c3c6d7;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #737686;
 }

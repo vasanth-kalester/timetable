@@ -106,67 +106,67 @@ export default function AcademicPage() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-50">Academic Management</h1>
-                    <p className="text-slate-400 mt-2">Manage subjects, curriculum, and faculty assignments.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-on-surface">Academic Management</h1>
+                    <p className="text-on-surface-variant mt-2">Manage subjects, curriculum, and faculty assignments.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800" onClick={() => setIsBulkImportOpen(true)}>
+                    <Button variant="outline" onClick={() => setIsBulkImportOpen(true)}>
                         <Upload className="w-4 h-4 mr-2" /> Bulk Import
                     </Button>
-                    <Button className="shadow-lg shadow-indigo-600/20 bg-indigo-600 hover:bg-indigo-700" onClick={() => { setError(null); setIsAddModalOpen(true); }}>
+                    <Button onClick={() => { setError(null); setIsAddModalOpen(true); }}>
                         <Plus className="w-4 h-4 mr-2" /> Add Subject
                     </Button>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="border-slate-800/60 bg-slate-900/40">
+                <Card>
                     <CardContent className="p-6 flex items-center gap-4">
-                        <div className="p-3 rounded-xl bg-blue-500/10">
-                            <BookOpen className="w-6 h-6 text-blue-500" />
+                        <div className="p-3 rounded-xl bg-primary/10">
+                            <BookOpen className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-slate-400">Total Subjects</p>
-                            <p className="text-2xl font-bold text-slate-50">{isLoading ? "-" : subjects.length}</p>
+                            <p className="text-sm font-medium text-on-surface-variant">Total Subjects</p>
+                            <p className="text-2xl font-bold text-on-surface">{isLoading ? "-" : subjects.length}</p>
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="border-slate-800/60 bg-slate-900/40">
+                <Card>
                     <CardContent className="p-6 flex items-center gap-4">
-                        <div className="p-3 rounded-xl bg-indigo-500/10">
-                            <GraduationCap className="w-6 h-6 text-indigo-500" />
+                        <div className="p-3 rounded-xl bg-secondary/10">
+                            <GraduationCap className="w-6 h-6 text-secondary" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-slate-400">Active Faculty</p>
-                            <p className="text-2xl font-bold text-slate-50">0</p>
+                            <p className="text-sm font-medium text-on-surface-variant">Active Faculty</p>
+                            <p className="text-2xl font-bold text-on-surface">0</p>
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="border-slate-800/60 bg-slate-900/40">
+                <Card>
                     <CardContent className="p-6 flex items-center gap-4">
-                        <div className="p-3 rounded-xl bg-emerald-500/10">
-                            <Users className="w-6 h-6 text-emerald-500" />
+                        <div className="p-3 rounded-xl bg-tertiary/10">
+                            <Users className="w-6 h-6 text-tertiary" />
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-slate-400">Enrolled Students</p>
-                            <p className="text-2xl font-bold text-slate-50">0</p>
+                            <p className="text-sm font-medium text-on-surface-variant">Enrolled Students</p>
+                            <p className="text-2xl font-bold text-on-surface">0</p>
                         </div>
                     </CardContent>
                 </Card>
             </div>
 
-            <Card className="border-slate-800/60 bg-slate-900/40">
-                <CardHeader className="flex flex-row items-center justify-between border-b border-slate-800 pb-4">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between border-b border-outline-variant pb-4">
                     <CardTitle>Subject Directory</CardTitle>
                     <div className="relative w-64">
-                        <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
-                        <Input placeholder="Search subjects..." className="pl-9 h-9 bg-slate-800/50" />
+                        <Search className="absolute left-3 top-2.5 h-4 w-4 text-outline" />
+                        <Input placeholder="Search subjects..." className="pl-9 h-9 bg-surface-container-low border-outline-variant" />
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
-                            <thead className="text-xs text-slate-400 uppercase bg-slate-900/50 border-b border-slate-800">
+                            <thead className="text-xs text-on-surface-variant uppercase bg-surface-container-low border-b border-outline-variant">
                                 <tr>
                                     <th className="px-6 py-4 font-medium">Code</th>
                                     <th className="px-6 py-4 font-medium">Subject Name</th>
@@ -176,30 +176,30 @@ export default function AcademicPage() {
                                     <th className="px-6 py-4 font-medium text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-800/50">
+                            <tbody className="divide-y divide-outline-variant">
                                 {isLoading ? (
                                     <tr>
                                         <td colSpan={6} className="px-6 py-8 text-center">
-                                            <Loader2 className="w-6 h-6 animate-spin text-slate-500 mx-auto" />
+                                            <Loader2 className="w-6 h-6 animate-spin text-outline mx-auto" />
                                         </td>
                                     </tr>
                                 ) : subjects.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                                        <td colSpan={6} className="px-6 py-8 text-center text-on-surface-variant">
                                             No subjects found.
                                         </td>
                                     </tr>
                                 ) : (
                                     subjects.map((subject) => (
-                                        <tr key={subject.id} className="hover:bg-slate-800/30 transition-colors">
-                                            <td className="px-6 py-4 font-medium text-indigo-400">{subject.code}</td>
-                                            <td className="px-6 py-4 text-slate-200">{subject.name}</td>
-                                            <td className="px-6 py-4 text-slate-300">{subject.hoursPerWeek}</td>
-                                            <td className="px-6 py-4 text-slate-300">{subject.faculty}</td>
-                                            <td className="px-6 py-4 text-slate-300">{subject.students}</td>
+                                        <tr key={subject.id} className="hover:bg-surface-container-low transition-colors">
+                                            <td className="px-6 py-4 font-medium text-primary">{subject.code}</td>
+                                            <td className="px-6 py-4 text-on-surface">{subject.name}</td>
+                                            <td className="px-6 py-4 text-on-surface-variant">{subject.hoursPerWeek}</td>
+                                            <td className="px-6 py-4 text-on-surface-variant">{subject.faculty}</td>
+                                            <td className="px-6 py-4 text-on-surface-variant">{subject.students}</td>
                                             <td className="px-6 py-4 text-right">
                                                 <Button variant="ghost" size="sm" className="h-8 text-xs mr-2" onClick={() => openEditModal(subject)}>Edit</Button>
-                                                <Button variant="ghost" size="sm" className="h-8 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10" onClick={() => handleDeleteSubject(subject.id)}>
+                                                <Button variant="ghost" size="sm" className="h-8 text-xs text-error hover:text-on-error-container hover:bg-error-container" onClick={() => handleDeleteSubject(subject.id)}>
                                                     <Trash2 className="w-4 h-4" />
                                                 </Button>
                                             </td>
@@ -215,43 +215,41 @@ export default function AcademicPage() {
             {/* Add Subject Modal */}
             {isAddModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-                            <h2 className="text-lg font-semibold text-slate-50">Add New Subject</h2>
-                            <button onClick={() => setIsAddModalOpen(false)} className="text-slate-400 hover:text-slate-200 transition-colors">
+                    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="flex items-center justify-between p-6 border-b border-outline-variant">
+                            <h2 className="text-lg font-semibold text-on-surface">Add New Subject</h2>
+                            <button onClick={() => setIsAddModalOpen(false)} className="text-on-surface-variant hover:text-on-surface transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
                         <form onSubmit={handleAddSubject} className="p-6 space-y-4">
                             {error && (
-                                <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
+                                <div className="p-3 bg-error-container border border-error/50 rounded-lg text-on-error-container text-sm">
                                     {error}
                                 </div>
                             )}
                             <div className="space-y-2">
-                                <label htmlFor="code" className="text-sm font-medium text-slate-300">Subject Code</label>
+                                <label htmlFor="code" className="text-sm font-medium text-on-surface-variant">Subject Code</label>
                                 <Input
                                     id="code"
                                     placeholder="e.g. CS101"
                                     value={newSubject.code}
                                     onChange={(e) => setNewSubject({ ...newSubject, code: e.target.value })}
-                                    className="bg-slate-800 border-slate-700"
                                     required
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="name" className="text-sm font-medium text-slate-300">Subject Name</label>
+                                <label htmlFor="name" className="text-sm font-medium text-on-surface-variant">Subject Name</label>
                                 <Input
                                     id="name"
                                     placeholder="e.g. Introduction to Computer Science"
                                     value={newSubject.name}
                                     onChange={(e) => setNewSubject({ ...newSubject, name: e.target.value })}
-                                    className="bg-slate-800 border-slate-700"
                                     required
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="hoursPerWeek" className="text-sm font-medium text-slate-300">Hours Per Week</label>
+                                <label htmlFor="hoursPerWeek" className="text-sm font-medium text-on-surface-variant">Hours Per Week</label>
                                 <Input
                                     id="hoursPerWeek"
                                     type="number"
@@ -259,15 +257,14 @@ export default function AcademicPage() {
                                     max="10"
                                     value={newSubject.hoursPerWeek}
                                     onChange={(e) => setNewSubject({ ...newSubject, hoursPerWeek: e.target.value })}
-                                    className="bg-slate-800 border-slate-700"
                                     required
                                 />
                             </div>
-                            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-800">
+                            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-outline-variant">
                                 <Button type="button" variant="ghost" onClick={() => setIsAddModalOpen(false)}>
                                     Cancel
                                 </Button>
-                                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700" disabled={isSubmitting}>
+                                <Button type="submit" disabled={isSubmitting}>
                                     {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                                     Add Subject
                                 </Button>
@@ -280,43 +277,41 @@ export default function AcademicPage() {
             {/* Edit Subject Modal */}
             {isEditModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-                            <h2 className="text-lg font-semibold text-slate-50">Edit Subject</h2>
-                            <button onClick={() => setIsEditModalOpen(false)} className="text-slate-400 hover:text-slate-200 transition-colors">
+                    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="flex items-center justify-between p-6 border-b border-outline-variant">
+                            <h2 className="text-lg font-semibold text-on-surface">Edit Subject</h2>
+                            <button onClick={() => setIsEditModalOpen(false)} className="text-on-surface-variant hover:text-on-surface transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
                         <form onSubmit={handleEditSubject} className="p-6 space-y-4">
                             {error && (
-                                <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
+                                <div className="p-3 bg-error-container border border-error/50 rounded-lg text-on-error-container text-sm">
                                     {error}
                                 </div>
                             )}
                             <div className="space-y-2">
-                                <label htmlFor="edit-code" className="text-sm font-medium text-slate-300">Subject Code</label>
+                                <label htmlFor="edit-code" className="text-sm font-medium text-on-surface-variant">Subject Code</label>
                                 <Input
                                     id="edit-code"
                                     placeholder="e.g. CS101"
                                     value={editingSubject.code}
                                     onChange={(e) => setEditingSubject({ ...editingSubject, code: e.target.value })}
-                                    className="bg-slate-800 border-slate-700"
                                     required
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="edit-name" className="text-sm font-medium text-slate-300">Subject Name</label>
+                                <label htmlFor="edit-name" className="text-sm font-medium text-on-surface-variant">Subject Name</label>
                                 <Input
                                     id="edit-name"
                                     placeholder="e.g. Introduction to Computer Science"
                                     value={editingSubject.name}
                                     onChange={(e) => setEditingSubject({ ...editingSubject, name: e.target.value })}
-                                    className="bg-slate-800 border-slate-700"
                                     required
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="edit-hoursPerWeek" className="text-sm font-medium text-slate-300">Hours Per Week</label>
+                                <label htmlFor="edit-hoursPerWeek" className="text-sm font-medium text-on-surface-variant">Hours Per Week</label>
                                 <Input
                                     id="edit-hoursPerWeek"
                                     type="number"
@@ -324,15 +319,14 @@ export default function AcademicPage() {
                                     max="10"
                                     value={editingSubject.hoursPerWeek}
                                     onChange={(e) => setEditingSubject({ ...editingSubject, hoursPerWeek: e.target.value })}
-                                    className="bg-slate-800 border-slate-700"
                                     required
                                 />
                             </div>
-                            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-800">
+                            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-outline-variant">
                                 <Button type="button" variant="ghost" onClick={() => setIsEditModalOpen(false)}>
                                     Cancel
                                 </Button>
-                                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700" disabled={isSubmitting}>
+                                <Button type="submit" disabled={isSubmitting}>
                                     {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                                     Save Changes
                                 </Button>

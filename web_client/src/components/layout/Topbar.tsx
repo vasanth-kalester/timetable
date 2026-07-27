@@ -40,41 +40,41 @@ export function Topbar({ onMenuClick }: TopbarProps) {
     }
 
     return (
-        <header className="h-16 flex items-center justify-between px-4 md:px-8 bg-slate-900/50 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+        <header className="h-16 flex items-center justify-between px-4 md:px-8 bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant sticky top-0 z-40">
             <div className="flex items-center gap-2 md:gap-4 w-full md:w-96">
                 <button
                     onClick={onMenuClick}
-                    className="md:hidden p-2 text-slate-400 hover:text-slate-200 transition-colors rounded-lg hover:bg-slate-800"
+                    className="md:hidden p-2 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg hover:bg-surface-container-low"
                 >
                     <Menu className="w-5 h-5" />
                 </button>
                 <div className="relative w-full max-w-[200px] md:max-w-full">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-outline" />
                     <Input
                         placeholder="Search..."
-                        className="pl-9 h-9 bg-slate-800/50 border-slate-700/50 focus-visible:ring-indigo-500/50 rounded-full text-sm md:placeholder:text-slate-500 placeholder:text-transparent md:placeholder:text-slate-500"
+                        className="pl-9 h-9 bg-surface-container-low border-outline-variant focus-visible:ring-primary/50 rounded-full text-sm md:placeholder:text-on-surface-variant placeholder:text-transparent md:placeholder:text-on-surface-variant"
                     />
                 </div>
             </div>
 
             <div className="flex items-center gap-2 md:gap-4">
-                <button className="relative p-2 text-slate-400 hover:text-slate-200 transition-colors rounded-full hover:bg-slate-800">
+                <button className="relative p-2 text-on-surface-variant hover:text-on-surface transition-colors rounded-full hover:bg-surface-container-low">
                     <Bell className="w-5 h-5" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full ring-2 ring-slate-900" />
+                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full ring-2 ring-surface-container-lowest" />
                 </button>
 
-                <div className="h-8 w-px bg-slate-800 mx-1 md:mx-2" />
+                <div className="h-8 w-px bg-outline-variant mx-1 md:mx-2" />
 
                 <div className="relative">
                     <div
-                        className="flex items-center gap-3 cursor-pointer hover:bg-slate-800/50 p-1.5 rounded-lg transition-colors"
+                        className="flex items-center gap-3 cursor-pointer hover:bg-surface-container-low p-1.5 rounded-lg transition-colors"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
                         <div className="text-right hidden md:block">
-                            <p className="text-sm font-medium text-slate-200 leading-none">{fullName}</p>
-                            <p className="text-xs text-slate-500 mt-1">{roleDisplay}</p>
+                            <p className="text-sm font-medium text-on-surface leading-none">{fullName}</p>
+                            <p className="text-xs text-on-surface-variant mt-1">{roleDisplay}</p>
                         </div>
-                        <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold shadow-inner">
+                        <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary font-semibold shadow-inner">
                             {initials}
                         </div>
                     </div>
@@ -85,33 +85,33 @@ export function Topbar({ onMenuClick }: TopbarProps) {
                                 className="fixed inset-0 z-40"
                                 onClick={() => setIsDropdownOpen(false)}
                             />
-                            <div className="absolute right-0 mt-2 w-56 rounded-xl border border-slate-800 bg-slate-900/95 backdrop-blur-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
-                                <div className="p-3 border-b border-slate-800">
-                                    <p className="text-sm font-medium text-slate-200">{fullName}</p>
-                                    <p className="text-xs text-slate-500 truncate mt-0.5">{profile?.email}</p>
+                            <div className="absolute right-0 mt-2 w-56 rounded-xl border border-outline-variant bg-surface-container-lowest shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
+                                <div className="p-3 border-b border-outline-variant">
+                                    <p className="text-sm font-medium text-on-surface">{fullName}</p>
+                                    <p className="text-xs text-on-surface-variant truncate mt-0.5">{profile?.email}</p>
                                     {profile?.college_code && (
-                                        <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-1 rounded bg-indigo-500/10 border border-indigo-500/20">
-                                            <span className="text-[10px] font-semibold text-indigo-400/70 uppercase tracking-wider">Code</span>
-                                            <span className="text-xs font-bold text-indigo-400 tracking-widest">{profile.college_code}</span>
+                                        <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-1 rounded bg-primary-container border border-primary-container">
+                                            <span className="text-[10px] font-semibold text-on-primary-container uppercase tracking-wider">Code</span>
+                                            <span className="text-xs font-bold text-on-primary-container tracking-widest">{profile.college_code}</span>
                                         </div>
                                     )}
                                 </div>
                                 <div className="p-1.5">
                                     <Link
                                         href="/settings"
-                                        className="flex items-center gap-2 px-2.5 py-2 text-sm text-slate-300 hover:text-slate-100 hover:bg-slate-800 rounded-lg transition-colors"
+                                        className="flex items-center gap-2 px-2.5 py-2 text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors"
                                         onClick={() => setIsDropdownOpen(false)}
                                     >
-                                        <Settings className="w-4 h-4 text-slate-400" />
+                                        <Settings className="w-4 h-4 text-outline" />
                                         Settings
                                     </Link>
                                 </div>
-                                <div className="p-1.5 border-t border-slate-800">
+                                <div className="p-1.5 border-t border-outline-variant">
                                     <button
                                         onClick={handleSignOut}
-                                        className="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                        className="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors"
                                     >
-                                        <LogOut className="w-4 h-4 text-red-400/70" />
+                                        <LogOut className="w-4 h-4" />
                                         Sign Out
                                     </button>
                                 </div>

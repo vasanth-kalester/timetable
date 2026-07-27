@@ -70,12 +70,12 @@ export default function TimetablePage() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-50">Timetable</h1>
-                    <p className="text-slate-400 mt-2">View your academic schedule.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-on-surface">Timetable</h1>
+                    <p className="text-on-surface-variant mt-2">View your academic schedule.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <select
-                        className="h-9 rounded-md border border-slate-800 bg-slate-950 px-3 py-1 text-sm text-slate-50 mr-4"
+                        className="h-9 rounded-md border border-outline-variant bg-surface-container-low px-3 py-1 text-sm text-on-surface mr-4"
                         value={selectedClass}
                         onChange={e => setSelectedClass(e.target.value)}
                     >
@@ -85,11 +85,11 @@ export default function TimetablePage() {
                     <Button variant="outline" size="sm" className="h-9">
                         <Filter className="w-4 h-4 mr-2" /> Filter
                     </Button>
-                    <div className="flex items-center bg-slate-900 border border-slate-800 rounded-md p-1">
+                    <div className="flex items-center bg-surface-container-low border border-outline-variant rounded-md p-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7 rounded-sm">
                             <ChevronLeft className="w-4 h-4" />
                         </Button>
-                        <span className="text-sm font-medium px-4 text-slate-200">{currentWeek}</span>
+                        <span className="text-sm font-medium px-4 text-on-surface">{currentWeek}</span>
                         <Button variant="ghost" size="icon" className="h-7 w-7 rounded-sm">
                             <ChevronRight className="w-4 h-4" />
                         </Button>
@@ -98,43 +98,43 @@ export default function TimetablePage() {
             </div>
 
             {error && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+                <div className="p-3 rounded-lg bg-error-container border border-error/20 text-on-error-container text-sm flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4" />
                     {error}
                 </div>
             )}
 
-            <Card className="flex-1 border-slate-800/60 bg-slate-900/40 overflow-hidden flex flex-col">
+            <Card className="flex-1 overflow-hidden flex flex-col">
                 <CardContent className="p-0 flex-1 overflow-auto">
                     <div className="min-w-[800px]">
                         {/* Header Row */}
-                        <div className="grid grid-cols-7 border-b border-slate-800 bg-slate-900/80 sticky top-0 z-10">
-                            <div className="p-4 text-center text-sm font-medium text-slate-400 border-r border-slate-800">
+                        <div className="grid grid-cols-7 border-b border-outline-variant bg-surface-container-low sticky top-0 z-10">
+                            <div className="p-4 text-center text-sm font-medium text-on-surface-variant border-r border-outline-variant">
                                 Time
                             </div>
                             {days.map((day) => (
-                                <div key={day} className="p-4 text-center text-sm font-medium text-slate-200 border-r border-slate-800 last:border-0">
+                                <div key={day} className="p-4 text-center text-sm font-medium text-on-surface border-r border-outline-variant last:border-0">
                                     {day}
                                 </div>
                             ))}
                         </div>
 
                         {/* Time Slots */}
-                        <div className="divide-y divide-slate-800">
+                        <div className="divide-y divide-outline-variant">
                             {timeSlots.map((time) => (
                                 <div key={time} className="grid grid-cols-7 group">
-                                    <div className="p-4 text-center text-xs font-medium text-slate-500 border-r border-slate-800 bg-slate-900/20 group-hover:bg-slate-900/40 transition-colors">
+                                    <div className="p-4 text-center text-xs font-medium text-on-surface-variant border-r border-outline-variant bg-surface-container-low group-hover:bg-surface-container-high transition-colors">
                                         {time}
                                     </div>
                                     {days.map((day) => {
                                         const slot = slots.find(s => s.classId === selectedClass && s.day === day && s.time === time)
                                         return (
-                                            <div key={`${day}-${time}`} className="p-2 border-r border-slate-800 last:border-0 min-h-[100px] hover:bg-slate-800/20 transition-colors">
+                                            <div key={`${day}-${time}`} className="p-2 border-r border-outline-variant last:border-0 min-h-[100px] hover:bg-surface-container-low transition-colors">
                                                 {slot && (
-                                                    <div className="h-full rounded-lg border border-indigo-500/30 bg-indigo-500/10 p-3 flex flex-col justify-between shadow-sm">
-                                                        <p className="text-sm font-semibold leading-tight text-indigo-100">{subjects.find(s => s.id === slot.subjectId)?.name}</p>
+                                                    <div className="h-full rounded-lg border border-primary/30 bg-primary/10 p-3 flex flex-col justify-between shadow-sm">
+                                                        <p className="text-sm font-semibold leading-tight text-primary">{subjects.find(s => s.id === slot.subjectId)?.name}</p>
                                                         <div className="mt-2 flex items-center justify-between text-xs opacity-80">
-                                                            <span className="text-indigo-200">{rooms.find(r => r.id === slot.roomId)?.name}</span>
+                                                            <span className="text-primary/80">{rooms.find(r => r.id === slot.roomId)?.name}</span>
                                                         </div>
                                                     </div>
                                                 )}

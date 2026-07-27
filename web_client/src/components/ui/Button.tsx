@@ -9,21 +9,21 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
     {
         variants: {
             variant: {
-                default: "bg-indigo-600 text-white hover:bg-indigo-700",
-                destructive: "bg-red-500 text-white hover:bg-red-600",
-                outline: "border border-slate-700 bg-transparent hover:bg-slate-800 text-slate-100",
-                secondary: "bg-slate-800 text-slate-100 hover:bg-slate-700",
-                ghost: "hover:bg-slate-800 text-slate-100",
-                link: "text-indigo-500 underline-offset-4 hover:underline",
+                default: "bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container",
+                destructive: "bg-error text-on-error hover:bg-error-container hover:text-on-error-container",
+                outline: "border border-outline-variant bg-transparent hover:bg-surface-container-high text-on-surface",
+                secondary: "bg-surface-container-high text-on-surface hover:bg-surface-container-highest",
+                ghost: "hover:bg-surface-container-high text-primary",
+                link: "text-primary underline-offset-4 hover:underline",
             },
             size: {
                 default: "h-10 px-4 py-2",
-                sm: "h-9 rounded-md px-3",
-                lg: "h-11 rounded-md px-8",
+                sm: "h-9 rounded-lg px-3",
+                lg: "h-11 rounded-lg px-8",
                 icon: "h-10 w-10",
             },
         },

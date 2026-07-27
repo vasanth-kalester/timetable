@@ -97,21 +97,21 @@ export default function StaffPage() {
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight text-slate-50">Staff Directory</h1>
-                <p className="text-slate-400 mt-2">Manage your college's faculty and staff members.</p>
+                <h1 className="text-3xl font-bold tracking-tight text-on-surface">Staff Directory</h1>
+                <p className="text-on-surface-variant mt-2">Manage your college's faculty and staff members.</p>
             </div>
 
             {error && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+                <div className="p-3 rounded-lg bg-error-container border border-error/20 text-on-error-container text-sm flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4" />
                     {error}
                 </div>
             )}
 
-            <div className="flex p-1 bg-slate-800/50 rounded-lg w-full max-w-md">
+            <div className="flex p-1 bg-surface-container-low border border-outline-variant rounded-lg w-full max-w-md">
                 {(userRole === 'principal' || userRole === 'hod') && (
                     <button
-                        className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${activeTab === 'pending' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
+                        className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${activeTab === 'pending' ? 'bg-primary text-on-primary shadow' : 'text-on-surface-variant hover:text-on-surface'}`}
                         onClick={() => setActiveTab('pending')}
                     >
                         <Clock className="w-4 h-4" />
@@ -119,7 +119,7 @@ export default function StaffPage() {
                     </button>
                 )}
                 <button
-                    className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${activeTab === 'active' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
+                    className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${activeTab === 'active' ? 'bg-primary text-on-primary shadow' : 'text-on-surface-variant hover:text-on-surface'}`}
                     onClick={() => setActiveTab('active')}
                 >
                     <Users className="w-4 h-4" />
@@ -127,7 +127,7 @@ export default function StaffPage() {
                 </button>
             </div>
 
-            <Card className="border-slate-800/60 bg-slate-900/40">
+            <Card>
                 <CardHeader>
                     <CardTitle>{activeTab === 'pending' ? 'Pending Registrations' : 'Active Staff Members'}</CardTitle>
                     <CardDescription>
@@ -139,40 +139,40 @@ export default function StaffPage() {
                 <CardContent className="p-0">
                     {isLoading ? (
                         <div className="flex justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+                            <Loader2 className="w-8 h-8 animate-spin text-primary" />
                         </div>
                     ) : staff.length === 0 ? (
                         <div className="text-center py-12">
                             {activeTab === 'pending' ? (
                                 <>
-                                    <CheckCircle2 className="w-12 h-12 text-emerald-500/50 mx-auto mb-4" />
-                                    <h3 className="text-lg font-medium text-slate-300">All caught up!</h3>
-                                    <p className="text-slate-500 mt-1">There are no pending staff registrations to review.</p>
+                                    <CheckCircle2 className="w-12 h-12 text-tertiary/50 mx-auto mb-4" />
+                                    <h3 className="text-lg font-medium text-on-surface">All caught up!</h3>
+                                    <p className="text-on-surface-variant mt-1">There are no pending staff registrations to review.</p>
                                 </>
                             ) : (
                                 <>
-                                    <Users className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-                                    <h3 className="text-lg font-medium text-slate-300">No active staff</h3>
-                                    <p className="text-slate-500 mt-1">You don't have any approved staff members yet.</p>
+                                    <Users className="w-12 h-12 text-on-surface-variant mx-auto mb-4" />
+                                    <h3 className="text-lg font-medium text-on-surface">No active staff</h3>
+                                    <p className="text-on-surface-variant mt-1">You don't have any approved staff members yet.</p>
                                 </>
                             )}
                         </div>
                     ) : (
-                        <div className="divide-y divide-slate-800/60">
+                        <div className="divide-y divide-outline-variant/40">
                             {staff.map((member) => (
-                                <div key={member.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-800/30 transition-colors">
+                                <div key={member.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-surface-container-low transition-colors">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
-                                            <span className="font-bold text-indigo-400 uppercase">
+                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                                            <span className="font-bold text-primary uppercase">
                                                 {member.first_name.charAt(0)}{member.last_name.charAt(0)}
                                             </span>
                                         </div>
                                         <div>
-                                            <h4 className="font-medium text-slate-200">{member.first_name} {member.last_name}</h4>
+                                            <h4 className="font-medium text-on-surface">{member.first_name} {member.last_name}</h4>
                                             <div className="flex items-center gap-2 mt-0.5">
-                                                <p className="text-xs text-slate-500">{member.email}</p>
-                                                <span className="w-1 h-1 rounded-full bg-slate-700"></span>
-                                                <p className="text-xs font-medium text-indigo-400/80 capitalize">{member.role}</p>
+                                                <p className="text-xs text-on-surface-variant">{member.email}</p>
+                                                <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
+                                                <p className="text-xs font-medium text-primary/80 capitalize">{member.role}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@ export default function StaffPage() {
                                         <div className="flex items-center gap-2">
                                             <Button
                                                 variant="outline"
-                                                className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                                                className="border-error/30 text-error hover:bg-error-container hover:text-error"
                                                 onClick={() => handleApproval(member.id, 'rejected')}
                                                 disabled={processingId === member.id}
                                             >
@@ -189,7 +189,7 @@ export default function StaffPage() {
                                                 Reject
                                             </Button>
                                             <Button
-                                                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                                className="bg-tertiary hover:bg-tertiary/90 text-white"
                                                 onClick={() => handleApproval(member.id, 'approved')}
                                                 disabled={processingId === member.id}
                                             >

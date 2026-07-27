@@ -100,13 +100,13 @@ export function BulkImportModal({ isOpen, onClose, onImport }: BulkImportModalPr
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col animate-in zoom-in-95 duration-200">
-                <div className="flex items-center justify-between p-6 border-b border-slate-800">
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col animate-in zoom-in-95 duration-200">
+                <div className="flex items-center justify-between p-6 border-b border-outline-variant">
                     <div>
-                        <h2 className="text-xl font-bold text-slate-50">Bulk Import Subjects</h2>
-                        <p className="text-sm text-slate-400 mt-1">Upload a CSV file to add multiple subjects at once.</p>
+                        <h2 className="text-xl font-bold text-on-surface">Bulk Import Subjects</h2>
+                        <p className="text-sm text-on-surface-variant mt-1">Upload a CSV file to add multiple subjects at once.</p>
                     </div>
-                    <button onClick={onClose} className="text-slate-400 hover:text-slate-200 transition-colors">
+                    <button onClick={onClose} className="text-on-surface-variant hover:text-on-surface transition-colors">
                         <X className="w-5 h-5" />
                     </button>
                 </div>
@@ -115,17 +115,17 @@ export function BulkImportModal({ isOpen, onClose, onImport }: BulkImportModalPr
                     {/* File Upload Area */}
                     {!file && (
                         <div
-                            className="border-2 border-dashed border-slate-700 rounded-xl p-12 flex flex-col items-center justify-center text-center hover:bg-slate-800/50 transition-colors cursor-pointer"
+                            className="border-2 border-dashed border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center text-center hover:bg-surface-container-low transition-colors cursor-pointer"
                             onClick={() => fileInputRef.current?.click()}
                         >
-                            <div className="bg-indigo-500/10 p-4 rounded-full mb-4">
-                                <Upload className="w-8 h-8 text-indigo-400" />
+                            <div className="bg-primary/10 p-4 rounded-full mb-4">
+                                <Upload className="w-8 h-8 text-primary" />
                             </div>
-                            <h3 className="text-lg font-semibold text-slate-200 mb-2">Click to upload CSV</h3>
-                            <p className="text-sm text-slate-400 max-w-md mx-auto mb-6">
+                            <h3 className="text-lg font-semibold text-on-surface mb-2">Click to upload CSV</h3>
+                            <p className="text-sm text-on-surface-variant max-w-md mx-auto mb-6">
                                 Make sure your CSV matches the required format. You can download the template below to get started.
                             </p>
-                            <Button variant="outline" className="border-slate-700 hover:bg-slate-800" onClick={(e) => { e.stopPropagation(); downloadTemplate(); }}>
+                            <Button variant="outline" onClick={(e) => { e.stopPropagation(); downloadTemplate(); }}>
                                 <Download className="w-4 h-4 mr-2" /> Download Template
                             </Button>
                             <input
@@ -141,27 +141,27 @@ export function BulkImportModal({ isOpen, onClose, onImport }: BulkImportModalPr
                     {/* File Selected State */}
                     {file && (
                         <div className="space-y-6">
-                            <div className="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+                            <div className="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-outline-variant">
                                 <div className="flex items-center gap-3">
-                                    <FileSpreadsheet className="w-8 h-8 text-emerald-400" />
+                                    <FileSpreadsheet className="w-8 h-8 text-tertiary" />
                                     <div>
-                                        <p className="font-medium text-slate-200">{file.name}</p>
-                                        <p className="text-xs text-slate-400">{(file.size / 1024).toFixed(2)} KB • {parsedData.length} rows found</p>
+                                        <p className="font-medium text-on-surface">{file.name}</p>
+                                        <p className="text-xs text-on-surface-variant">{(file.size / 1024).toFixed(2)} KB • {parsedData.length} rows found</p>
                                     </div>
                                 </div>
-                                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-red-400" onClick={() => { setFile(null); setParsedData([]); setErrors([]); setImportResult(null); }}>
+                                <Button variant="ghost" size="sm" className="text-error hover:text-on-error-container hover:bg-error-container" onClick={() => { setFile(null); setParsedData([]); setErrors([]); setImportResult(null); }}>
                                     Remove
                                 </Button>
                             </div>
 
                             {/* Errors */}
                             {errors.length > 0 && (
-                                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg space-y-2">
-                                    <div className="flex items-center gap-2 text-red-400 font-semibold mb-2">
+                                <div className="p-4 bg-error-container border border-error/20 rounded-lg space-y-2">
+                                    <div className="flex items-center gap-2 text-on-error-container font-semibold mb-2">
                                         <AlertTriangle className="w-5 h-5" />
                                         <span>Validation Errors Found</span>
                                     </div>
-                                    <ul className="list-disc list-inside text-sm text-red-400/80 space-y-1">
+                                    <ul className="list-disc list-inside text-sm text-on-error-container/80 space-y-1">
                                         {errors.map((err, i) => <li key={i}>{err}</li>)}
                                     </ul>
                                 </div>
@@ -169,7 +169,7 @@ export function BulkImportModal({ isOpen, onClose, onImport }: BulkImportModalPr
 
                             {/* Import Result */}
                             {importResult && (
-                                <div className={`p-4 rounded-lg border flex items-start gap-3 ${importResult.success ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
+                                <div className={`p-4 rounded-lg border flex items-start gap-3 ${importResult.success ? 'bg-tertiary/10 border-tertiary/20 text-tertiary' : 'bg-error-container border-error/20 text-on-error-container'}`}>
                                     {importResult.success ? <CheckCircle2 className="w-5 h-5 mt-0.5" /> : <AlertTriangle className="w-5 h-5 mt-0.5" />}
                                     <div>
                                         <p className="font-semibold">{importResult.success ? 'Import Successful!' : 'Import Failed'}</p>
@@ -181,10 +181,10 @@ export function BulkImportModal({ isOpen, onClose, onImport }: BulkImportModalPr
                             {/* Data Preview */}
                             {parsedData.length > 0 && errors.length === 0 && (
                                 <div className="space-y-3">
-                                    <h3 className="text-sm font-semibold text-slate-300">Data Preview (First 5 rows)</h3>
-                                    <div className="overflow-x-auto border border-slate-800 rounded-lg">
+                                    <h3 className="text-sm font-semibold text-on-surface-variant">Data Preview (First 5 rows)</h3>
+                                    <div className="overflow-x-auto border border-outline-variant rounded-lg">
                                         <table className="w-full text-sm text-left">
-                                            <thead className="text-xs text-slate-400 uppercase bg-slate-900/50 border-b border-slate-800">
+                                            <thead className="text-xs text-on-surface-variant uppercase bg-surface-container-low border-b border-outline-variant">
                                                 <tr>
                                                     <th className="px-4 py-3">Subject Name</th>
                                                     <th className="px-4 py-3">Code</th>
@@ -193,21 +193,21 @@ export function BulkImportModal({ isOpen, onClose, onImport }: BulkImportModalPr
                                                     <th className="px-4 py-3">Class</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-slate-800/50">
+                                            <tbody className="divide-y divide-outline-variant">
                                                 {parsedData.slice(0, 5).map((row, i) => (
-                                                    <tr key={i} className="bg-slate-900/20">
-                                                        <td className="px-4 py-3 text-slate-200">{row["Subject Name"]}</td>
-                                                        <td className="px-4 py-3 text-indigo-400">{row["Subject Code"]}</td>
-                                                        <td className="px-4 py-3 text-slate-300">{row["Hours Per Week"]}</td>
-                                                        <td className="px-4 py-3 text-slate-300">{row["Department Code"]}</td>
-                                                        <td className="px-4 py-3 text-slate-300">{row["Class Name"]}</td>
+                                                    <tr key={i} className="bg-surface-container-low">
+                                                        <td className="px-4 py-3 text-on-surface">{row["Subject Name"]}</td>
+                                                        <td className="px-4 py-3 text-primary">{row["Subject Code"]}</td>
+                                                        <td className="px-4 py-3 text-on-surface-variant">{row["Hours Per Week"]}</td>
+                                                        <td className="px-4 py-3 text-on-surface-variant">{row["Department Code"]}</td>
+                                                        <td className="px-4 py-3 text-on-surface-variant">{row["Class Name"]}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
                                     </div>
                                     {parsedData.length > 5 && (
-                                        <p className="text-xs text-slate-500 text-center">...and {parsedData.length - 5} more rows.</p>
+                                        <p className="text-xs text-outline text-center">...and {parsedData.length - 5} more rows.</p>
                                     )}
                                 </div>
                             )}
@@ -215,12 +215,11 @@ export function BulkImportModal({ isOpen, onClose, onImport }: BulkImportModalPr
                     )}
                 </div>
 
-                <div className="p-6 border-t border-slate-800 flex justify-end gap-3 bg-slate-900/50">
+                <div className="p-6 border-t border-outline-variant flex justify-end gap-3 bg-surface-container-low">
                     <Button variant="ghost" onClick={onClose} disabled={isImporting}>
                         Cancel
                     </Button>
                     <Button
-                        className="bg-indigo-600 hover:bg-indigo-700"
                         disabled={!file || errors.length > 0 || isImporting || importResult?.success}
                         onClick={handleImport}
                     >

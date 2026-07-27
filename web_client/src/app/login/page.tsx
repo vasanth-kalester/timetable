@@ -52,14 +52,14 @@ export default function LoginPage() {
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/10 blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" />
 
-            <Card className="w-full max-w-md relative z-10 border-slate-800 bg-slate-900/80 backdrop-blur-xl">
+            <Card className="w-full max-w-md relative z-10">
                 <CardHeader className="space-y-4 text-center pb-8">
-                    <div className="mx-auto bg-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
-                        <Network className="w-8 h-8 text-white" />
+                    <div className="mx-auto bg-primary w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                        <Network className="w-8 h-8 text-on-primary" />
                     </div>
                     <div className="space-y-2">
-                        <CardTitle className="text-2xl font-bold tracking-tight text-slate-50">Sign In to EduFlow</CardTitle>
-                        <CardDescription className="text-slate-400">
+                        <CardTitle className="text-2xl font-bold tracking-tight text-on-surface">Sign In to EduFlow</CardTitle>
+                        <CardDescription className="text-on-surface-variant">
                             Enter your email and password to access your campus.
                         </CardDescription>
                     </div>
@@ -67,7 +67,7 @@ export default function LoginPage() {
 
                 <CardContent className="space-y-6">
                     {error && (
-                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+                        <div className="p-3 rounded-lg bg-error-container border border-error/20 text-on-error-container text-sm flex items-center gap-2">
                             <ShieldAlert className="w-4 h-4" />
                             {error}
                         </div>
@@ -75,9 +75,9 @@ export default function LoginPage() {
 
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Email Address</label>
+                            <label className="text-sm font-medium text-on-surface-variant">Email Address</label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-slate-500" />
+                                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-outline" />
                                 <Input
                                     type="email"
                                     placeholder="e.g. principal@college.edu"
@@ -89,9 +89,9 @@ export default function LoginPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Password</label>
+                            <label className="text-sm font-medium text-on-surface-variant">Password</label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-slate-500" />
+                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-outline" />
                                 <Input
                                     type="password"
                                     placeholder="••••••••"
@@ -104,17 +104,17 @@ export default function LoginPage() {
                     </div>
 
                     <div className="flex items-center justify-between text-sm">
-                        <label className="flex items-center gap-2 cursor-pointer text-slate-300">
-                            <input type="checkbox" className="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-600 focus:ring-offset-slate-900" defaultChecked />
+                        <label className="flex items-center gap-2 cursor-pointer text-on-surface-variant">
+                            <input type="checkbox" className="rounded border-outline-variant bg-surface-container-low text-primary focus:ring-primary focus:ring-offset-background" defaultChecked />
                             Remember Me
                         </label>
-                        <a href="#" className="text-indigo-400 hover:text-indigo-300 transition-colors">
+                        <a href="#" className="text-primary hover:text-primary/80 transition-colors">
                             Forgot Password?
                         </a>
                     </div>
 
                     <Button
-                        className="w-full h-12 text-base font-semibold shadow-lg shadow-indigo-600/20"
+                        className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/20"
                         onClick={handleLogin}
                         disabled={isLoading}
                     >
@@ -126,10 +126,10 @@ export default function LoginPage() {
                     </Button>
                 </CardContent>
 
-                <CardFooter className="flex flex-col border-t border-slate-800 pt-6 gap-4">
+                <CardFooter className="flex flex-col border-t border-outline-variant pt-6 gap-4">
                     <div className="w-full text-center">
-                        <p className="text-sm text-slate-400">
-                            New to EduFlow? <a href="/register" className="text-indigo-400 hover:text-indigo-300 font-medium">Sign up</a>
+                        <p className="text-sm text-on-surface-variant">
+                            New to EduFlow? <a href="/register" className="text-primary hover:text-primary/80 font-medium">Sign up</a>
                         </p>
                     </div>
                 </CardFooter>
