@@ -1,13 +1,17 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Bell, Search, Settings, LogOut } from "lucide-react"
+import { Bell, Search, Settings, LogOut, Menu } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/Input"
 import { signOut, useSession } from "next-auth/react"
 
-export function Topbar() {
+interface TopbarProps {
+    onMenuClick?: () => void;
+}
+
+export function Topbar({ onMenuClick }: TopbarProps) {
     const { data: session } = useSession()
     const [profile, setProfile] = useState<{ first_name: string, last_name: string, role: string, email: string, college_code?: string } | null>(null)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -36,24 +40,30 @@ export function Topbar() {
     }
 
     return (
-        <header className="h-16 flex items-center justify-between px-8 bg-slate-900/50 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
-            <div className="flex items-center w-96">
-                <div className="relative w-full">
+        <header className="h-16 flex items-center justify-between px-4 md:px-8 bg-slate-900/50 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+            <div className="flex items-center gap-2 md:gap-4 w-full md:w-96">
+                <button
+                    onClick={onMenuClick}
+                    className="md:hidden p-2 text-slate-400 hover:text-slate-200 transition-colors rounded-lg hover:bg-slate-800"
+                >
+                    <Menu className="w-5 h-5" />
+                </button>
+                <div className="relative w-full max-w-[200px] md:max-w-full">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
                     <Input
-                        placeholder="Search students, courses, or resources..."
-                        className="pl-9 h-9 bg-slate-800/50 border-slate-700/50 focus-visible:ring-indigo-500/50 rounded-full"
+                        placeholder="Search..."
+                        className="pl-9 h-9 bg-slate-800/50 border-slate-700/50 focus-visible:ring-indigo-500/50 rounded-full text-sm md:placeholder:text-slate-500 placeholder:text-transparent md:placeholder:text-slate-500"
                     />
                 </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
                 <button className="relative p-2 text-slate-400 hover:text-slate-200 transition-colors rounded-full hover:bg-slate-800">
                     <Bell className="w-5 h-5" />
                     <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full ring-2 ring-slate-900" />
                 </button>
 
-                <div className="h-8 w-px bg-slate-800 mx-2" />
+                <div className="h-8 w-px bg-slate-800 mx-1 md:mx-2" />
 
                 <div className="relative">
                     <div

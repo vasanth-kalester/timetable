@@ -112,3 +112,84 @@ export async function deleteSubject(id: string) {
         return { error: e.message || "Failed to delete subject" }
     }
 }
+
+export async function bulkImportSubjects(data: any[]) {
+    try {
+        const session = await getServerSession(authOptions)
+        if (!session) return { error: "Unauthorized" }
+
+        const results = {
+            successCount: 0,
+            errors: [] as string[]
+        }
+
+        // Process sequentially to handle relations safely
+        for (let i = 0; i < data.length; i++) {
+            const row = data[i]
+            const rowIndex = i + 1
+
+            try {
+                // 1. Find Department
+                const dept = await prisma.department.findUnique({
+                    where: { code: row["Department Code"] }
+                })
+
+                if (!dept) {
+                    results.errors.push(`Row ${rowIndex}: Department with code '${row["Department Code"]}' not found.`)
+                    continue
+                }
+
+                // 2. Find Class
+                const cls = await prisma.class.findFirst({
+                    where: {
+                        name: row["Class Name"],
+                        departmentId: dept.id
+                    }
+                })
+
+                if (!cls) {
+                    results.errors.push(`Row ${rowIndex}: Class '${row["Class Name"]}' not found in department '${dept.code}'. Please create the class first.`)
+                    continue
+                }
+
+                // 3. Check if Subject Code already exists in this class
+                const existingSubject = await prisma.subject.findFirst({
+                    where: {
+                        code: row["Subject Code"],
+                        classId: cls.id
+                    }
+                })
+
+                if (existingSubject) {
+                    results.errors.push(`Row ${rowIndex}: Subject code '${row["Subject Code"]}' already exists in class '${cls.name}'.`)
+                    continue
+                }
+
+                // 4. Create Subject
+                await prisma.subject.create({
+                    data: {
+                        name: row["Subject Name"],
+                        code: row["Subject Code"],
+                        hoursPerWeek: parseInt(row["Hours Per Week"]) || 3,
+                        classId: cls.id
+                    } as any
+                })
+
+                results.successCount++
+            } catch (err: any) {
+                results.errors.push(`Row ${rowIndex}: Unexpected error - ${err.message}`)
+            }
+        }
+
+        if (results.errors.length > 0) {
+            return {
+                error: `Imported ${results.successCount} subjects, but encountered ${results.errors.length} errors:\n${results.errors.slice(0, 5).join('\n')}${results.errors.length > 5 ? '\n...and more' : ''}`,
+                success: results.successCount > 0
+            }
+        }
+
+        return { success: true, message: `Successfully imported ${results.successCount} subjects.` }
+    } catch (e: any) {
+        return { error: e.message || "Failed to process bulk import" }
+    }
+}

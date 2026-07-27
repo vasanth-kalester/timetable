@@ -250,6 +250,8 @@ model Faculty {
   schedulingProfile SchedulingProfile?
   availability      Availability[]
   leaves            Leave[]
+  originalAllocations SubstituteAllocation[] @relation("OriginalStaff")
+  substituteAllocations SubstituteAllocation[] @relation("SubstituteStaff")
 }
 
 model CrossDepartmentTeaching {
@@ -306,6 +308,23 @@ model Leave {
   updatedAt   DateTime @updatedAt
 
   faculty     Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  substituteAllocations SubstituteAllocation[]
+}
+
+model SubstituteAllocation {
+  id              String   @id @default(cuid())
+  leaveId         String
+  originalStaffId String
+  substituteId    String
+  date            DateTime
+  period          Int
+  classId         String
+  subjectId       String
+  status          String   @default("Assigned")
+
+  leave           Leave    @relation(fields: [leaveId], references: [id], onDelete: Cascade)
+  originalStaff   Faculty  @relation("OriginalStaff", fields: [originalStaffId], references: [id])
+  substitute      Faculty  @relation("SubstituteStaff", fields: [substituteId], references: [id])
 }
 
 model ValidationReport {

@@ -4,14 +4,16 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { Search, Plus, BookOpen, GraduationCap, Users, Loader2, X, Trash2 } from "lucide-react"
-import { getSubjects, addSubject, editSubject, deleteSubject } from "@/app/actions/academic"
+import { Search, Plus, BookOpen, GraduationCap, Users, Loader2, X, Trash2, Upload } from "lucide-react"
+import { getSubjects, addSubject, editSubject, deleteSubject, bulkImportSubjects } from "@/app/actions/academic"
+import { BulkImportModal } from "@/components/academic/BulkImportModal"
 
 export default function AcademicPage() {
     const [subjects, setSubjects] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isAddModalOpen, setIsAddModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [isBulkImportOpen, setIsBulkImportOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [newSubject, setNewSubject] = useState({ code: "", name: "", hoursPerWeek: "3" })
@@ -92,6 +94,14 @@ export default function AcademicPage() {
         setIsEditModalOpen(true)
     }
 
+    const handleBulkImport = async (data: any[]) => {
+        const result = await bulkImportSubjects(data)
+        if (result.success) {
+            fetchSubjects()
+        }
+        return result
+    }
+
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex items-center justify-between">
@@ -99,9 +109,14 @@ export default function AcademicPage() {
                     <h1 className="text-3xl font-bold tracking-tight text-slate-50">Academic Management</h1>
                     <p className="text-slate-400 mt-2">Manage subjects, curriculum, and faculty assignments.</p>
                 </div>
-                <Button className="shadow-lg shadow-indigo-600/20" onClick={() => { setError(null); setIsAddModalOpen(true); }}>
-                    <Plus className="w-4 h-4 mr-2" /> Add Subject
-                </Button>
+                <div className="flex items-center gap-3">
+                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800" onClick={() => setIsBulkImportOpen(true)}>
+                        <Upload className="w-4 h-4 mr-2" /> Bulk Import
+                    </Button>
+                    <Button className="shadow-lg shadow-indigo-600/20 bg-indigo-600 hover:bg-indigo-700" onClick={() => { setError(null); setIsAddModalOpen(true); }}>
+                        <Plus className="w-4 h-4 mr-2" /> Add Subject
+                    </Button>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -326,6 +341,12 @@ export default function AcademicPage() {
                     </div>
                 </div>
             )}
+
+            <BulkImportModal
+                isOpen={isBulkImportOpen}
+                onClose={() => setIsBulkImportOpen(false)}
+                onImport={handleBulkImport}
+            />
         </div>
     )
 }

@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcryptjs')
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({ datasources: { db: { url: 'postgresql://postgres:Kalester%40timetable@db.lzkoegmtltmzisfmggun.supabase.co:5432/postgres' } } })
 
 async function main() {
     const email = 'admin@eduflow.com'
