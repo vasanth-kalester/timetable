@@ -57,10 +57,10 @@ export default function InstitutionDetailsPage() {
     if (error || !college) {
         return (
             <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
-                <Button variant="ghost" onClick={() => router.push('/admin/institutions')} className="mb-4 text-slate-400">
+                <Button variant="ghost" onClick={() => router.push('/admin/institutions')} className="mb-4 text-on-surface-variant hover:text-on-surface">
                     <ArrowLeft className="w-4 h-4 mr-2" /> Back to Institutions
                 </Button>
-                <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-3">
+                <div className="p-4 rounded-lg bg-error-container border border-error/20 text-on-error-container flex items-center gap-3">
                     <ShieldAlert className="w-5 h-5" />
                     <p>{error || "College not found"}</p>
                 </div>
@@ -73,33 +73,33 @@ export default function InstitutionDetailsPage() {
     const faculty = users.filter(u => u.role === 'faculty')
 
     const renderUserList = (title: string, userList: any[], icon: any) => (
-        <Card className="border-slate-800/60 bg-slate-900/40 mt-6">
-            <CardHeader className="pb-3 border-b border-slate-800/60">
+        <Card className="mt-6">
+            <CardHeader className="pb-3 border-b border-outline-variant/60">
                 <div className="flex items-center gap-2">
                     {icon}
                     <CardTitle className="text-lg">{title}</CardTitle>
-                    <span className="ml-auto bg-slate-800 text-slate-300 text-xs py-0.5 px-2 rounded-full">{userList.length}</span>
+                    <span className="ml-auto bg-surface-container-high text-on-surface-variant text-xs py-0.5 px-2 rounded-full">{userList.length}</span>
                 </div>
             </CardHeader>
             <CardContent className="p-0">
                 {userList.length === 0 ? (
-                    <div className="p-6 text-center text-slate-500 text-sm">No users found in this category.</div>
+                    <div className="p-6 text-center text-on-surface-variant text-sm">No users found in this category.</div>
                 ) : (
-                    <div className="divide-y divide-slate-800/60">
+                    <div className="divide-y divide-outline-variant/60">
                         {userList.map(user => (
-                            <div key={user.id} className="p-4 flex items-center justify-between hover:bg-slate-800/30 transition-colors">
+                            <div key={user.id} className="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors">
                                 <div>
-                                    <h4 className="font-medium text-slate-200">{user.name || "Unnamed User"}</h4>
-                                    <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
+                                    <h4 className="font-medium text-on-surface">{user.name || "Unnamed User"}</h4>
+                                    <div className="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
                                         <span>{user.email}</span>
                                         {user.department !== 'N/A' && (
                                             <>
-                                                <span className="w-1 h-1 rounded-full bg-slate-700"></span>
+                                                <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
                                                 <span>Dept ID: {user.department}</span>
                                             </>
                                         )}
-                                        <span className="w-1 h-1 rounded-full bg-slate-700"></span>
-                                        <span className={`capitalize ${user.status === 'approved' ? 'text-emerald-400/80' : 'text-amber-400/80'}`}>
+                                        <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
+                                        <span className={`capitalize ${user.status === 'approved' ? 'text-tertiary/80' : 'text-amber-500/80'}`}>
                                             {user.status}
                                         </span>
                                     </div>
@@ -107,7 +107,7 @@ export default function InstitutionDetailsPage() {
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="text-slate-500 hover:text-red-400 hover:bg-red-500/10"
+                                    className="text-on-surface-variant hover:text-error hover:bg-error-container"
                                     onClick={() => handleRemoveUser(user.id)}
                                     disabled={processingId === user.id}
                                 >
@@ -123,20 +123,20 @@ export default function InstitutionDetailsPage() {
 
     return (
         <div className="p-6 md:p-8 max-w-5xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <Button variant="ghost" onClick={() => router.push('/admin/institutions')} className="mb-2 text-slate-400 hover:text-slate-200 -ml-4">
+            <Button variant="ghost" onClick={() => router.push('/admin/institutions')} className="mb-2 text-on-surface-variant hover:text-on-surface -ml-4">
                 <ArrowLeft className="w-4 h-4 mr-2" /> Back to Institutions
             </Button>
 
             <div className="flex items-start justify-between">
                 <div>
                     <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-indigo-500/10 rounded-lg border border-indigo-500/20">
-                            <Building2 className="w-6 h-6 text-indigo-400" />
+                        <div className="p-2 bg-primary/10 rounded-lg border border-primary/20">
+                            <Building2 className="w-6 h-6 text-primary" />
                         </div>
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-50">{college.name}</h1>
+                        <h1 className="text-3xl font-bold tracking-tight text-on-surface">{college.name}</h1>
                     </div>
-                    <p className="text-slate-400 flex items-center gap-2">
-                        <span className="font-mono text-indigo-300 bg-indigo-500/10 px-2 py-0.5 rounded text-sm border border-indigo-500/20">Code: {college.code}</span>
+                    <p className="text-on-surface-variant flex items-center gap-2">
+                        <span className="font-mono text-primary bg-primary/10 px-2 py-0.5 rounded text-sm border border-primary/20">Code: {college.code}</span>
                         <span>•</span>
                         <span>{users.length} Total Members</span>
                     </p>
@@ -144,9 +144,9 @@ export default function InstitutionDetailsPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-6 mt-8">
-                {renderUserList("Principals", principals, <ShieldAlert className="w-5 h-5 text-amber-400" />)}
-                {renderUserList("Heads of Department (HODs)", hods, <UserCog className="w-5 h-5 text-indigo-400" />)}
-                {renderUserList("Faculty Members", faculty, <GraduationCap className="w-5 h-5 text-emerald-400" />)}
+                {renderUserList("Principals", principals, <ShieldAlert className="w-5 h-5 text-amber-500" />)}
+                {renderUserList("Heads of Department (HODs)", hods, <UserCog className="w-5 h-5 text-primary" />)}
+                {renderUserList("Faculty Members", faculty, <GraduationCap className="w-5 h-5 text-tertiary" />)}
             </div>
         </div>
     )
