@@ -1,5 +1,0 @@
-DATABASE_URL="postgresql://postgres:Kalester@timetable@db.lzkoegmtltmzisfmggun.supabase.co:6543/postgres?pgbouncer=true"
-NEXTAUTH_SECRET="my-super-secret-key-for-local-dev"
-NEXTAUTH_URL="http://localhost:3001"
-NEXT_PUBLIC_SUPABASE_URL=https://lzkoegmtltmzisfmggun.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable__fT1ICYKiYfhqDVk85y8VA_QhZXlALy
