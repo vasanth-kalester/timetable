@@ -47,12 +47,30 @@ export async function getSubjects(classId: string) {
     }
 }
 
-export async function createSubject(data: { name: string, code: string, classId: string, staffId?: string }) {
+export async function createSubject(data: { name: string, code: string, classId: string, staffId?: string, hoursPerWeek?: number }) {
     try {
         const subject = await prisma.subject.create({ data })
         return { subject }
     } catch (e: any) {
         return { error: e.message || "Failed to create subject" }
+    }
+}
+
+export async function updateSubject(id: string, data: { name?: string, code?: string, hoursPerWeek?: number }) {
+    try {
+        const subject = await prisma.subject.update({ where: { id }, data })
+        return { subject }
+    } catch (e: any) {
+        return { error: e.message || "Failed to update subject" }
+    }
+}
+
+export async function bulkDeleteSlotsByClass(classId: string) {
+    try {
+        await prisma.timetableSlot.deleteMany({ where: { classId } })
+        return { success: true }
+    } catch (e: any) {
+        return { error: e.message || "Failed to delete slots" }
     }
 }
 
