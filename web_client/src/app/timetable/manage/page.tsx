@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { BookOpen, Users, MapPin, Plus, Trash2, Loader2, AlertTriangle, Hash, Layers3, Building2 } from "lucide-react"
 import { useSession } from "next-auth/react"
-import { getSubjects, createSubject, deleteSubject, updateSubjectStaff, getClasses, createClass, deleteClass, getRooms, createRoom, deleteRoom } from "@/app/actions/timetable"
+import { getSubjects, createSubject, deleteSubject, updateSubjectStaff, getClasses, createClass, deleteClass, getRooms, createRoom, deleteRoom, updateClassRoom } from "@/app/actions/timetable"
 import { getStaff } from "@/app/actions/staff"
 import { toast, ToastContainer } from "@/components/ui/Toast"
 
@@ -58,8 +58,12 @@ export default function TimetableManagePage() {
         setError(null)
         try {
             if (tab === 'classes') {
-                const res = await getClasses(dId, cId)
-                if (res.classes) setClasses(res.classes)
+                const [clsRes, roomRes] = await Promise.all([
+                    getClasses(dId, cId),
+                    getRooms(cId)
+                ])
+                if (clsRes.classes) setClasses(clsRes.classes)
+                if (roomRes.rooms) setRooms(roomRes.rooms)
             } else if (tab === 'rooms') {
                 const res = await getRooms(cId)
                 if (res.rooms) setRooms(res.rooms)
@@ -441,12 +445,43 @@ export default function TimetableManagePage() {
                                             </button>
                                         </div>
                                     ) : (
-                                        <button
-                                            className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/10"
-                                            onClick={() => setDeleteConfirmId(item.id)}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
+                                        <div className="flex items-center gap-3">
+                                            {activeTab === 'classes' && (
+                                                <div className="flex items-center gap-2 mr-2">
+                                                    <label className="text-xs font-medium text-on-surface-variant">Room:</label>
+                                                    <select
+                                                        className="w-32 h-8 rounded-md border border-outline-variant bg-surface-container-low px-2 text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary/30"
+                                                        value={item.roomId || ""}
+                                                        onChange={async e => {
+                                                            const roomId = e.target.value || null
+                                                            const res = await updateClassRoom(item.id, roomId)
+                                                            if (res.error) {
+                                                                toast(res.error, "error")
+                                                            } else {
+                                                                toast("Room mapped successfully", "success")
+                                                            }
+                                                            await fetchData(collegeId!, departmentId, activeTab)
+                                                        }}
+                                                    >
+                                                        <option value="">— Any —</option>
+                                                        {rooms.map(r => {
+                                                            const isAssignedToOther = classes.some(c => c.roomId === r.id && c.id !== item.id)
+                                                            return (
+                                                                <option key={r.id} value={r.id} disabled={isAssignedToOther}>
+                                                                    {r.name} {isAssignedToOther ? "(Assigned)" : ""}
+                                                                </option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                </div>
+                                            )}
+                                            <button
+                                                className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/10"
+                                                onClick={() => setDeleteConfirmId(item.id)}
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
                                     )}
                                 </div>
                             ))}

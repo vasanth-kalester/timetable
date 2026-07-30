@@ -36,6 +36,24 @@ export async function deleteClass(id: string) {
     } catch (e: any) {
         return { error: e.message || "Failed to delete class" }
     }
+export async function updateClassRoom(id: string, roomId: string | null) {
+    try {
+        if (roomId) {
+            const existing = await prisma.class.findFirst({
+                where: { roomId, id: { not: id } }
+            })
+            if (existing) {
+                return { error: "This room is already assigned to another class." }
+            }
+        }
+        const updatedClass = await prisma.class.update({
+            where: { id },
+            data: { roomId }
+        })
+        return { class: updatedClass }
+    } catch (e: any) {
+        return { error: e.message || "Failed to update class room" }
+    }
 }
 
 // --- Subjects ---
@@ -250,8 +268,12 @@ export async function generateDepartmentTimetable(departmentId: string, collegeI
                     if (classBooked.has(classKey) || staffBooked.has(staffKey)) continue
 
                     // Find a free room
-                    const freeRoom = rooms.find(r => !roomBooked.has(`${r.id}|${day}|${time}`))
-                    if (!freeRoom) continue
+                    let selectedRoomId = (cls as any).roomId
+                    if (!selectedRoomId || roomBooked.has(`${selectedRoomId}|${day}|${time}`)) {
+                        const freeRoom = rooms.find(r => !roomBooked.has(`${r.id}|${day}|${time}`))
+                        selectedRoomId = freeRoom?.id
+                    }
+                    if (!selectedRoomId) continue
 
                     generatedSlots.push({
                         day,
@@ -259,12 +281,12 @@ export async function generateDepartmentTimetable(departmentId: string, collegeI
                         classId: cls.id,
                         subjectId: subject.id,
                         staffId: subject.staffId!,
-                        roomId: freeRoom.id
+                        roomId: selectedRoomId
                     })
 
                     classBooked.add(classKey)
                     staffBooked.add(staffKey)
-                    roomBooked.add(`${freeRoom.id}|${day}|${time}`)
+                    roomBooked.add(`${selectedRoomId}|${day}|${time}`)
                     scheduled++
                 }
             }
