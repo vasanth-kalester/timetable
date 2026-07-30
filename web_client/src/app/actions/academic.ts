@@ -20,15 +20,34 @@ export async function getSubjects() {
         })
         const facultyMap = new Map(faculty.map(f => [f.id, f.name]))
 
-        const mappedSubjects = subjects.map(s => ({
-            id: s.id,
-            code: s.code,
-            name: s.name,
-            credits: (s as any).hoursPerWeek || 3, // Using hoursPerWeek as credits for display
-            hoursPerWeek: (s as any).hoursPerWeek || 3,
-            faculty: s.staffId ? facultyMap.get(s.staffId) || "Unknown" : "Unassigned",
-            students: 0 // Default since we don't have direct mapping in legacy schema
-        }))
+        // Fetch classes for the subjects
+        const classIds = subjects.map(s => s.classId).filter(Boolean) as string[]
+        const classes = await prisma.class.findMany({
+            where: { id: { in: classIds } }
+        })
+        const classMap = new Map(classes.map(c => [c.id, c]))
+
+        // Fetch departments for the classes
+        const departmentIds = classes.map(c => c.departmentId).filter(Boolean) as string[]
+        const departments = await prisma.department.findMany({
+            where: { id: { in: departmentIds } }
+        })
+        const departmentMap = new Map(departments.map(d => [d.id, d.name]))
+
+        const mappedSubjects = subjects.map(s => {
+            const cls = classMap.get(s.classId)
+            return {
+                id: s.id,
+                code: s.code,
+                name: s.name,
+                credits: (s as any).hoursPerWeek || 3, // Using hoursPerWeek as credits for display
+                hoursPerWeek: (s as any).hoursPerWeek || 3,
+                faculty: s.staffId ? facultyMap.get(s.staffId) || "Unknown" : "Unassigned",
+                className: cls?.name || "Unassigned",
+                departmentName: cls?.departmentId ? departmentMap.get(cls.departmentId) || "Unassigned" : "Unassigned",
+                students: 0 // Default since we don't have direct mapping in legacy schema
+            }
+        })
 
         return { subjects: mappedSubjects }
     } catch (e: any) {
@@ -113,6 +132,19 @@ export async function deleteSubject(id: string) {
     }
 }
 
+export async function deleteAllSubjects() {
+    try {
+        const session = await getServerSession(authOptions)
+        if (!session) return { error: "Unauthorized" }
+
+        await prisma.subject.deleteMany({})
+
+        return { success: true }
+    } catch (e: any) {
+        return { error: e.message || "Failed to delete all subjects" }
+    }
+}
+
 export async function bulkImportSubjects(data: any[]) {
     try {
         const session = await getServerSession(authOptions)
@@ -129,18 +161,44 @@ export async function bulkImportSubjects(data: any[]) {
             const rowIndex = i + 1
 
             try {
-                // 1. Find Department
-                const dept = await prisma.department.findUnique({
+                // 1. Find or Create Department
+                let dept = await prisma.department.findUnique({
                     where: { code: row["Department Code"] }
                 })
 
                 if (!dept) {
-                    results.errors.push(`Row ${rowIndex}: Department with code '${row["Department Code"]}' not found.`)
-                    continue
+                    // Try to get collegeId from the user's profile
+                    const user = await prisma.user.findUnique({
+                        where: { id: (session.user as any).id },
+                        include: { profile: true }
+                    })
+
+                    let collegeId = user?.profile?.collegeId
+
+                    // Fallback to first college if not linked
+                    if (!collegeId) {
+                        const firstCollege = await prisma.college.findFirst()
+                        if (firstCollege) {
+                            collegeId = firstCollege.id
+                        }
+                    }
+
+                    if (!collegeId) {
+                        results.errors.push(`Row ${rowIndex}: Department with code '${row["Department Code"]}' not found, and could not auto-create because no college was found.`)
+                        continue
+                    }
+
+                    dept = await prisma.department.create({
+                        data: {
+                            name: row["Department Code"], // Using code as name since we don't have it in CSV
+                            code: row["Department Code"],
+                            collegeId: collegeId
+                        }
+                    })
                 }
 
-                // 2. Find Class
-                const cls = await prisma.class.findFirst({
+                // 2. Find or Create Class
+                let cls = await prisma.class.findFirst({
                     where: {
                         name: row["Class Name"],
                         departmentId: dept.id
@@ -148,8 +206,12 @@ export async function bulkImportSubjects(data: any[]) {
                 })
 
                 if (!cls) {
-                    results.errors.push(`Row ${rowIndex}: Class '${row["Class Name"]}' not found in department '${dept.code}'. Please create the class first.`)
-                    continue
+                    cls = await prisma.class.create({
+                        data: {
+                            name: row["Class Name"],
+                            departmentId: dept.id
+                        }
+                    })
                 }
 
                 // 3. Check if Subject Code already exists in this class

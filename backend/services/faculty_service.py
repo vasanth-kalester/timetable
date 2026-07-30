@@ -2,12 +2,13 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 import uuid
 import time
-from models.faculty import Faculty, SchedulingProfile, Availability, Leave
+from models.faculty import Faculty, SchedulingProfile, Availability, Leave, CrossDepartmentTeaching
 from schemas.faculty import (
     FacultyCreate, FacultyUpdate,
     SchedulingProfileCreate, SchedulingProfileUpdate,
     AvailabilityCreate, AvailabilityUpdate,
-    LeaveCreate, LeaveUpdate
+    LeaveCreate, LeaveUpdate,
+    CrossDepartmentTeachingCreate
 )
 
 def get_current_time():
@@ -179,3 +180,42 @@ class FacultyService:
         if not faculty:
             return False
         return faculty.status == "Active" and faculty.schedulingReadiness == "Ready"
+
+    @staticmethod
+    def assign_cross_department(db: Session, assignment_data: CrossDepartmentTeachingCreate) -> CrossDepartmentTeaching:
+        existing = db.query(CrossDepartmentTeaching).filter(
+            CrossDepartmentTeaching.facultyId == assignment_data.facultyId,
+            CrossDepartmentTeaching.departmentId == assignment_data.departmentId
+        ).first()
+        
+        if existing:
+            raise HTTPException(status_code=400, detail="Faculty is already assigned to this department")
+            
+        db_assignment = CrossDepartmentTeaching(
+            id=str(uuid.uuid4()),
+            **assignment_data.model_dump(),
+            createdAt=get_current_time(),
+            updatedAt=get_current_time()
+        )
+        db.add(db_assignment)
+        db.commit()
+        db.refresh(db_assignment)
+        return db_assignment
+
+    @staticmethod
+    def remove_cross_department(db: Session, faculty_id: str, department_id: str):
+        db_assignment = db.query(CrossDepartmentTeaching).filter(
+            CrossDepartmentTeaching.facultyId == faculty_id,
+            CrossDepartmentTeaching.departmentId == department_id
+        ).first()
+        
+        if not db_assignment:
+            raise HTTPException(status_code=404, detail="Cross-department assignment not found")
+            
+        db.delete(db_assignment)
+        db.commit()
+        return True
+
+    @staticmethod
+    def get_cross_departments(db: Session, faculty_id: str):
+        return db.query(CrossDepartmentTeaching).filter(CrossDepartmentTeaching.facultyId == faculty_id).all()

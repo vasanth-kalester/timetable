@@ -117,3 +117,19 @@ class LeaveResponse(LeaveBase):
 
     class Config:
         from_attributes = True
+
+# --- Cross Department Teaching Schemas ---
+class CrossDepartmentTeachingBase(BaseModel):
+    departmentId: str
+
+class CrossDepartmentTeachingCreate(CrossDepartmentTeachingBase):
+    facultyId: str
+
+class CrossDepartmentTeachingResponse(CrossDepartmentTeachingBase):
+    id: str
+    facultyId: str
+    createdAt: int
+    updatedAt: int
+
+    class Config:
+        from_attributes = True

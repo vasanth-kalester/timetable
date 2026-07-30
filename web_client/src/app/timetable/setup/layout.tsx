@@ -1,4 +1,3 @@
-import { ShellLayout } from "@/components/layout/ShellLayout"
 
 export const metadata = {
     title: "Timetable Setup Wizard — EduFlow OS",
@@ -6,5 +5,5 @@ export const metadata = {
 }
 
 export default function TimetableSetupLayout({ children }: { children: React.ReactNode }) {
-    return <ShellLayout>{children}</ShellLayout>
+    return <>{children}</>
 }

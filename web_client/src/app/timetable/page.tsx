@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
-import { ChevronLeft, ChevronRight, Filter, Loader2, AlertTriangle, Printer, Coffee } from "lucide-react"
+import { ChevronLeft, ChevronRight, Filter, Loader2, AlertTriangle, Printer, Coffee, Sparkles } from "lucide-react"
 import { useSession } from "next-auth/react"
-import { getClasses, getSubjects, getRooms, getTimetableSlots } from "@/app/actions/timetable"
+import { getClasses, getSubjects, getRooms, getTimetableSlots, generateDepartmentTimetable } from "@/app/actions/timetable"
 import { getStaff } from "@/app/actions/staff"
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -46,6 +46,9 @@ export default function TimetablePage() {
     const [slots, setSlots] = useState<any[]>([])
 
     const [selectedClass, setSelectedClass] = useState<string>("")
+    const [isGenerating, setIsGenerating] = useState(false)
+    const [collegeId, setCollegeId] = useState<string | null>(null)
+    const [departmentId, setDepartmentId] = useState<string | null>(null)
 
     useEffect(() => {
         if (!session?.user) return
@@ -56,6 +59,8 @@ export default function TimetablePage() {
             if (result.profile?.college_id && (result.profile as any).department_id) {
                 const cId = result.profile.college_id
                 const dId = (result.profile as any).department_id
+                setCollegeId(cId)
+                setDepartmentId(dId)
 
                 try {
                     const [clsRes, subRes, rmRes, slotRes, stfRes] = await Promise.all([
@@ -96,6 +101,31 @@ export default function TimetablePage() {
     const handleWeekNav = (dir: 1 | -1) => {
         setWeekOffset(prev => prev + dir)
         // In a real app, you'd compute the actual week label from the offset
+    }
+
+    const handleGenerateDepartmentTimetable = async () => {
+        if (!departmentId || !collegeId) return
+
+        if (!confirm("This will delete all existing timetable slots for this department and generate new ones. Are you sure?")) {
+            return
+        }
+
+        setIsGenerating(true)
+        setError(null)
+        try {
+            const res = await generateDepartmentTimetable(departmentId, collegeId)
+            if (res.error) throw new Error(res.error)
+
+            // Refresh slots
+            const slotRes = await getTimetableSlots(departmentId)
+            if (slotRes.slots) setSlots(slotRes.slots)
+
+            alert(`Successfully generated ${res.slotsGenerated} slots for the department!`)
+        } catch (err: any) {
+            setError(err.message || "Failed to generate timetable.")
+        } finally {
+            setIsGenerating(false)
+        }
     }
 
     const totalSlots = slots.filter(s => s.classId === selectedClass).length
@@ -141,6 +171,20 @@ export default function TimetablePage() {
                             <ChevronRight className="w-4 h-4" />
                         </Button>
                     </div>
+
+                    {/* Generate Department Timetable */}
+                    {(session?.user as any)?.role === 'hod' && (
+                        <Button
+                            variant="default"
+                            size="sm"
+                            className="h-9 gap-2 bg-primary text-on-primary hover:bg-primary/90"
+                            onClick={handleGenerateDepartmentTimetable}
+                            disabled={isGenerating}
+                        >
+                            {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                            Generate All
+                        </Button>
+                    )}
 
                     {/* Print */}
                     <Button

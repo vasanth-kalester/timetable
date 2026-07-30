@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Search, Plus, BookOpen, GraduationCap, Users, Loader2, X, Trash2, Upload } from "lucide-react"
-import { getSubjects, addSubject, editSubject, deleteSubject, bulkImportSubjects } from "@/app/actions/academic"
+import { getSubjects, addSubject, editSubject, deleteSubject, deleteAllSubjects, bulkImportSubjects } from "@/app/actions/academic"
 import { BulkImportModal } from "@/components/academic/BulkImportModal"
 
 export default function AcademicPage() {
@@ -83,6 +83,17 @@ export default function AcademicPage() {
         }
     }
 
+    const handleDeleteAllSubjects = async () => {
+        if (!confirm("WARNING: Are you sure you want to delete ALL subjects? This action cannot be undone.")) return
+
+        const result = await deleteAllSubjects()
+        if (!result.error) {
+            fetchSubjects()
+        } else {
+            alert(result.error)
+        }
+    }
+
     const openEditModal = (subject: any) => {
         setEditingSubject({
             id: subject.id,
@@ -110,6 +121,9 @@ export default function AcademicPage() {
                     <p className="text-on-surface-variant mt-2">Manage subjects, curriculum, and faculty assignments.</p>
                 </div>
                 <div className="flex items-center gap-3">
+                    <Button variant="outline" className="text-error hover:bg-error-container hover:text-on-error-container border-error/20" onClick={handleDeleteAllSubjects}>
+                        <Trash2 className="w-4 h-4 mr-2" /> Delete All
+                    </Button>
                     <Button variant="outline" onClick={() => setIsBulkImportOpen(true)}>
                         <Upload className="w-4 h-4 mr-2" /> Bulk Import
                     </Button>
@@ -170,6 +184,8 @@ export default function AcademicPage() {
                                 <tr>
                                     <th className="px-6 py-4 font-medium">Code</th>
                                     <th className="px-6 py-4 font-medium">Subject Name</th>
+                                    <th className="px-6 py-4 font-medium">Department</th>
+                                    <th className="px-6 py-4 font-medium">Class</th>
                                     <th className="px-6 py-4 font-medium">Hours/Week</th>
                                     <th className="px-6 py-4 font-medium">Primary Faculty</th>
                                     <th className="px-6 py-4 font-medium">Students</th>
@@ -179,13 +195,13 @@ export default function AcademicPage() {
                             <tbody className="divide-y divide-outline-variant">
                                 {isLoading ? (
                                     <tr>
-                                        <td colSpan={6} className="px-6 py-8 text-center">
+                                        <td colSpan={8} className="px-6 py-8 text-center">
                                             <Loader2 className="w-6 h-6 animate-spin text-outline mx-auto" />
                                         </td>
                                     </tr>
                                 ) : subjects.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="px-6 py-8 text-center text-on-surface-variant">
+                                        <td colSpan={8} className="px-6 py-8 text-center text-on-surface-variant">
                                             No subjects found.
                                         </td>
                                     </tr>
@@ -194,6 +210,8 @@ export default function AcademicPage() {
                                         <tr key={subject.id} className="hover:bg-surface-container-low transition-colors">
                                             <td className="px-6 py-4 font-medium text-primary">{subject.code}</td>
                                             <td className="px-6 py-4 text-on-surface">{subject.name}</td>
+                                            <td className="px-6 py-4 text-on-surface-variant">{subject.departmentName}</td>
+                                            <td className="px-6 py-4 text-on-surface-variant">{subject.className}</td>
                                             <td className="px-6 py-4 text-on-surface-variant">{subject.hoursPerWeek}</td>
                                             <td className="px-6 py-4 text-on-surface-variant">{subject.faculty}</td>
                                             <td className="px-6 py-4 text-on-surface-variant">{subject.students}</td>

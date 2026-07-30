@@ -24,15 +24,30 @@ export async function getStaff(collegeId: string, status: string, targetRole: st
             orderBy: { createdAt: 'desc' }
         })
 
-        const staff = users.map(u => ({
-            id: u.id,
-            first_name: u.profile?.firstName || "",
-            last_name: u.profile?.lastName || "",
-            email: u.email,
-            role: u.role,
-            approval_status: u.approvalStatus,
-            created_at: u.createdAt.toISOString()
-        }))
+        // Fetch corresponding faculty records to get cross-department info
+        const emails = users.map(u => u.email)
+        const faculties = await prisma.faculty.findMany({
+            where: { email: { in: emails } },
+            include: { crossDepartments: true }
+        })
+
+        const facultyMap = new Map()
+        faculties.forEach(f => facultyMap.set(f.email, f))
+
+        const staff = users.map(u => {
+            const faculty = facultyMap.get(u.email)
+            return {
+                id: u.id,
+                first_name: u.profile?.firstName || "",
+                last_name: u.profile?.lastName || "",
+                email: u.email,
+                role: u.role,
+                approval_status: u.approvalStatus,
+                created_at: u.createdAt.toISOString(),
+                faculty_id: faculty?.id || null,
+                cross_departments: faculty?.crossDepartments?.map((cd: any) => cd.departmentId) || []
+            }
+        })
 
         return { staff }
     } catch (e: any) {
@@ -49,5 +64,33 @@ export async function updateStaffApproval(id: string, status: string) {
         return { success: true }
     } catch (e: any) {
         return { error: e.message || "Failed to update staff" }
+    }
+}
+
+export async function assignCrossDepartment(facultyId: string, departmentId: string) {
+    try {
+        await prisma.crossDepartmentTeaching.create({
+            data: {
+                facultyId,
+                departmentId
+            }
+        })
+        return { success: true }
+    } catch (e: any) {
+        return { error: e.message || "Failed to assign cross-department teaching" }
+    }
+}
+
+export async function removeCrossDepartment(facultyId: string, departmentId: string) {
+    try {
+        await prisma.crossDepartmentTeaching.deleteMany({
+            where: {
+                facultyId,
+                departmentId
+            }
+        })
+        return { success: true }
+    } catch (e: any) {
+        return { error: e.message || "Failed to remove cross-department teaching" }
     }
 }

@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/Button"
 import { Users, CheckCircle2, XCircle, Loader2, AlertTriangle, Clock } from "lucide-react"
 import { useSession } from "next-auth/react"
-import { getStaff, updateStaffApproval } from "@/app/actions/staff"
+import { getStaff, updateStaffApproval, assignCrossDepartment, removeCrossDepartment } from "@/app/actions/staff"
+import { getDepartments } from "@/app/actions/departments"
 
 interface StaffProfile {
     id: string
@@ -15,6 +16,14 @@ interface StaffProfile {
     role: string
     approval_status: string
     created_at: string
+    faculty_id: string | null
+    cross_departments: string[]
+}
+
+interface Department {
+    id: string
+    name: string
+    code: string
 }
 
 export default function StaffPage() {
@@ -27,6 +36,9 @@ export default function StaffPage() {
     const [departmentId, setDepartmentId] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [processingId, setProcessingId] = useState<string | null>(null)
+    const [departments, setDepartments] = useState<Department[]>([])
+    const [selectedFaculty, setSelectedFaculty] = useState<StaffProfile | null>(null)
+    const [isDeptModalOpen, setIsDeptModalOpen] = useState(false)
 
     useEffect(() => {
         async function loadUserAndCollege() {
@@ -47,6 +59,13 @@ export default function StaffPage() {
                     // Since getProfile doesn't return departmentId yet, we'll fetch it directly or update getProfile
                     // For now, let's assume it's in the profile object if we update getProfile
                     setDepartmentId((result.profile as any).department_id || null)
+
+                    // Fetch departments for the college
+                    const deptResult = await getDepartments(result.profile.college_id)
+                    if (deptResult.departments) {
+                        setDepartments(deptResult.departments)
+                    }
+
                     fetchData(result.profile.college_id, role, (result.profile as any).department_id)
                 } else {
                     setIsLoading(false)
@@ -89,6 +108,38 @@ export default function StaffPage() {
             setStaff(staff.filter(s => s.id !== id))
         } catch (err: any) {
             alert(err.message || `Failed to ${status} user.`)
+        } finally {
+            setProcessingId(null)
+        }
+    }
+
+    const handleToggleCrossDepartment = async (facultyId: string, deptId: string, isAssigned: boolean) => {
+        setProcessingId(`dept-${facultyId}-${deptId}`)
+        try {
+            if (isAssigned) {
+                await removeCrossDepartment(facultyId, deptId)
+            } else {
+                await assignCrossDepartment(facultyId, deptId)
+            }
+
+            // Update local state
+            setStaff(staff.map(s => {
+                if (s.faculty_id === facultyId) {
+                    const newDepts = isAssigned
+                        ? s.cross_departments.filter(id => id !== deptId)
+                        : [...s.cross_departments, deptId]
+
+                    // Also update selectedFaculty if it's the one being edited
+                    if (selectedFaculty?.faculty_id === facultyId) {
+                        setSelectedFaculty({ ...s, cross_departments: newDepts })
+                    }
+
+                    return { ...s, cross_departments: newDepts }
+                }
+                return s
+            }))
+        } catch (err: any) {
+            alert(err.message || "Failed to update department assignment.")
         } finally {
             setProcessingId(null)
         }
@@ -198,12 +249,79 @@ export default function StaffPage() {
                                             </Button>
                                         </div>
                                     )}
+
+                                    {activeTab === 'active' && member.role === 'faculty' && member.faculty_id && (userRole === 'principal' || userRole === 'hod') && (
+                                        <div className="flex items-center gap-2">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setSelectedFaculty(member)
+                                                    setIsDeptModalOpen(true)
+                                                }}
+                                            >
+                                                Manage Depts
+                                            </Button>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
                     )}
                 </CardContent>
             </Card>
+
+            {/* Department Management Modal */}
+            {isDeptModalOpen && selectedFaculty && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-surface rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="p-6">
+                            <h3 className="text-xl font-bold text-on-surface mb-2">
+                                Cross-Department Teaching
+                            </h3>
+                            <p className="text-sm text-on-surface-variant mb-6">
+                                Assign {selectedFaculty.first_name} {selectedFaculty.last_name} to teach in other departments.
+                            </p>
+
+                            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+                                {departments.map(dept => {
+                                    const isAssigned = selectedFaculty.cross_departments.includes(dept.id)
+                                    // Don't show their primary department (assuming we know it, or just let them toggle any)
+                                    // For now, show all and let them toggle
+                                    return (
+                                        <div key={dept.id} className="flex items-center justify-between p-3 rounded-lg border border-outline-variant/30 hover:bg-surface-container-low">
+                                            <div>
+                                                <p className="font-medium text-on-surface">{dept.name}</p>
+                                                <p className="text-xs text-on-surface-variant">{dept.code}</p>
+                                            </div>
+                                            <Button
+                                                variant={isAssigned ? "default" : "outline"}
+                                                size="sm"
+                                                className={isAssigned ? "bg-primary text-on-primary" : ""}
+                                                onClick={() => handleToggleCrossDepartment(selectedFaculty.faculty_id!, dept.id, isAssigned)}
+                                                disabled={processingId === `dept-${selectedFaculty.faculty_id}-${dept.id}`}
+                                            >
+                                                {processingId === `dept-${selectedFaculty.faculty_id}-${dept.id}` ? (
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                ) : isAssigned ? (
+                                                    "Assigned"
+                                                ) : (
+                                                    "Assign"
+                                                )}
+                                            </Button>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                        <div className="bg-surface-container-low p-4 flex justify-end">
+                            <Button variant="outline" onClick={() => setIsDeptModalOpen(false)}>
+                                Close
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

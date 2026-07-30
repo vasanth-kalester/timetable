@@ -57,16 +57,16 @@ export default function TimetableManagePage() {
         setIsLoading(true)
         setError(null)
         try {
-            if (tab === 'classes' && dId) {
-                const res = await getClasses(dId)
+            if (tab === 'classes') {
+                const res = await getClasses(dId, cId)
                 if (res.classes) setClasses(res.classes)
             } else if (tab === 'rooms') {
                 const res = await getRooms(cId)
                 if (res.rooms) setRooms(res.rooms)
-            } else if (tab === 'class_subjects' && dId) {
+            } else if (tab === 'class_subjects') {
                 const [clsRes, stfRes] = await Promise.all([
-                    getClasses(dId),
-                    getStaff(cId, 'approved', 'faculty', dId)
+                    getClasses(dId, cId),
+                    getStaff(cId, 'approved', 'faculty', dId || undefined)
                 ])
                 if (clsRes.classes) {
                     setClasses(clsRes.classes)
@@ -220,8 +220,8 @@ export default function TimetableManagePage() {
                                     id="form-name"
                                     placeholder={
                                         activeTab === 'class_subjects' ? "e.g. Data Structures"
-                                        : activeTab === 'classes' ? "e.g. Year 2 — Section A"
-                                        : "e.g. Room 101"
+                                            : activeTab === 'classes' ? "e.g. Year 2 — Section A"
+                                                : "e.g. Room 101"
                                     }
                                     value={formData.name}
                                     onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}

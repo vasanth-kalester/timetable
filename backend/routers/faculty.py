@@ -10,7 +10,8 @@ from schemas.faculty import (
     FacultyCreate, FacultyUpdate, FacultyResponse,
     SchedulingProfileCreate, SchedulingProfileUpdate, SchedulingProfileResponse,
     AvailabilityCreate, AvailabilityUpdate, AvailabilityResponse,
-    LeaveCreate, LeaveUpdate, LeaveResponse
+    LeaveCreate, LeaveUpdate, LeaveResponse,
+    CrossDepartmentTeachingCreate, CrossDepartmentTeachingResponse
 )
 from services.faculty_service import FacultyService
 from services.audit_service import AuditService
@@ -156,3 +157,36 @@ def update_leave(
     db_leave = FacultyService.update_leave(db, leave_id, leave)
     AuditService.log_action(db, current_user, "UPDATE", "Leave", db_leave.id, old_value=old_value, new_value=leave.model_dump(exclude_unset=True))
     return db_leave
+
+# --- Cross Department Teaching ---
+@router.post("/{faculty_id}/cross-departments", response_model=CrossDepartmentTeachingResponse)
+def assign_cross_department(
+    faculty_id: str,
+    assignment: CrossDepartmentTeachingCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("principal", "hod", "admin"))
+):
+    if assignment.facultyId != faculty_id:
+        raise HTTPException(status_code=400, detail="Faculty ID mismatch")
+    db_assignment = FacultyService.assign_cross_department(db, assignment)
+    AuditService.log_action(db, current_user, "CREATE", "CrossDepartmentTeaching", db_assignment.id, new_value=assignment.model_dump())
+    return db_assignment
+
+@router.get("/{faculty_id}/cross-departments", response_model=List[CrossDepartmentTeachingResponse])
+def get_cross_departments(
+    faculty_id: str,
+    db: Session = Depends(get_db),
+    _ = Depends(require_role("principal", "hod", "admin"))
+):
+    return FacultyService.get_cross_departments(db, faculty_id)
+
+@router.delete("/{faculty_id}/cross-departments/{department_id}")
+def remove_cross_department(
+    faculty_id: str,
+    department_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("principal", "hod", "admin"))
+):
+    FacultyService.remove_cross_department(db, faculty_id, department_id)
+    AuditService.log_action(db, current_user, "DELETE", "CrossDepartmentTeaching", f"{faculty_id}-{department_id}")
+    return {"message": "Cross-department assignment removed successfully"}
